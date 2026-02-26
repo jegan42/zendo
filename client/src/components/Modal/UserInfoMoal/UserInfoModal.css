@@ -1,0 +1,61 @@
+.info-modal {
+  max-width: 500px ;
+  max-height: 90vh;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.info-section h3 {
+  font-size: 16px;
+  margin: 15px 0;
+
+  color: #1a1a1a;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.input-group label {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #666;
+}
+
+.input-group input, .input-group select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.disabled-input {
+  background-color: #f0f0f0;
+  color: #888;
+  cursor: not-allowed;
+}
+
+.phone-input-container {
+  display: flex;
+  gap: 10px;
+}
+
+.phone-input-container select {
+  width: 80px;
+}
+
+.phone-input-container input {
+  flex: 1;
+}
+
+.input-row {
+  display: flex;
+  gap: 15px;
+}
+
+.input-row .input-group {
+  flex: 1;
+}

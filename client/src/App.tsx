@@ -26,6 +26,7 @@ import Profil from "./pages/Profil";
 import Shop from "./pages/Shop";
 import ProductList from "./pages/ProductList";
 import Cart from "./pages/Cart";
+import SellerHome from "./pages/Seller/SellerHome";
 
 // --- Composants ---
 import Navbar from "./components/Navbar/Navbar";
@@ -67,6 +68,12 @@ function AppContent() {
         <Route path="/favoris" element={<Favoris />} />
         <Route path="/profil" element={<Profil />} />
         <Route path="/boutique" element={<Shop />} />
+
+        {/* --- Route produit (avant les catch-all dynamiques) --- */}
+        <Route path="/produit/:id" element={<ProductDetail />} />
+
+        {/* --- Route vendeur --- */}
+        <Route path="/vendeur" element={<SellerHome />} />
 
         {/* --- Routes dynamiques (ProductList par famille/categorie) --- */}
         {/* IMPORTANT : ces routes doivent etre APRES les routes fixes

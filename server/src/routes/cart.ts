@@ -20,11 +20,11 @@ const router = Router();
 // Quand on recoit un POST sur /cart/:id, on appelle la fonction cart du controller
 router.post("/:productId", addCartItem);
 
-// Quand on recoit un DELETE sur /cart/:id, on appelle la fonction cart du controller
-router.delete("/:productId", deleteCartItem);
+// Quand on recoit un DELETE sur /cart/:productId/:cartItemId, on supprime l'item du panier
+router.delete("/:productId/:cartItemId", deleteCartItem);
 
-// Quand on recoit un DELETE sur /cart/:id, on appelle la fonction cart du controller
-router.patch("/:productId", updateCartItem);
+// Quand on recoit un PATCH sur /cart/:productId/:cartItemId, on met a jour l'item du panier
+router.patch("/:productId/:cartItemId", updateCartItem);
 
 // Quand on recoit un GET sur /cart, on appelle la fonction cart du controller
 router.get("/", getCartItems);

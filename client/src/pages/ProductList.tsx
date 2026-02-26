@@ -147,17 +147,16 @@ const ProductList: React.FC = () => {
           <div className="loader">Chargement des produits...</div>
         ) : (
           <div className="product-grid">
-            {products.map(function (product: any) {
+            {products.map(function (product) {
               return (
                 <ProductView
-                  key={product._id}
-                  id={product._id}
-                  title={product.name}
+                  key={product.id}
+                  id={product.id}
+                  title={product.title}
                   price={product.price || 0}
-                  image={
-                    product.images && product.images[0] ? product.images[0] : ""
-                  }
+                  image={product.image || ""}
                   description={product.description || ""}
+                  variations={product.variations || []}
                 />
               );
             })}

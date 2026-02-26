@@ -21,8 +21,8 @@ export function Header() {
   // Récupérer le titre selon la route
   useEffect(() => {
     // met à jour le titre de l’en-tête en fonction de la route actuelle et du produit affiché
-    if (pathname.includes("/detailProduct") && productId) {
-      fetch(`http://localhost:3000/product/${productId}`)
+    if (pathname.includes("/produit") && productId) {
+      fetch(`http://localhost:5001/api/products/${productId}`)
         .then((response) => response.json())
         .then((data) => {
           if (data.product && data.product.name) {

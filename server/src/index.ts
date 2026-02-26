@@ -12,9 +12,11 @@ import authRoutes from "./routes/auth";
 import productRoutes from "./routes/product";
 import variationRoutes from "./routes/variation";
 
-
 import favorisRoutes from "./routes/favoris";
 import cartRoutes from "./routes/cart";
+import sellerRoutes from "./routes/seller";
+import userRoutes from "./routes/user";
+import addressRoutes from "./routes/address";
 
 // Charge depuis le .env
 // (MONGO_URI, JWT_SECRET, PORT)
@@ -53,6 +55,15 @@ app.use("/api/favoris", favorisRoutes);
 
 // Routes cart : GET/POST/DELETE /api/cart/...
 app.use("/api/cart", cartRoutes);
+
+// Routes seller : GET /api/seller/:id (dashboard vendeur)
+app.use("/api/seller", sellerRoutes);
+
+// Routes user : PUT /api/users/:id (update profil)
+app.use("/api/users", userRoutes);
+
+// Routes address : POST /api/address/save/:userId (sauvegarder adresse)
+app.use("/api/address", addressRoutes);
 
 // Route de test pour verifier que le serveur fonctionne
 // http://localhost:5000

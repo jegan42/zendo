@@ -1,7 +1,5 @@
 // =============================================================
 // PAGE LOGIN (version refactorisee) - Utilise les composants Button, Input, Message
-// C'est la meme logique que pages/Login.tsx mais avec les composants du dev
-// Route : /log (pour tester a cote de l'ancien /login)
 // =============================================================
 
 import React, { useState } from "react";
@@ -13,10 +11,9 @@ import { Input } from "../../components/Input/Input";
 import AuthHeader from "./AuthHeader";
 import { Message } from "../../components/Message/Message";
 import AuthFooter from "./AuthFooter";
-import { useDispatch } from "react-redux"; 
-import { setCredentials } from "../../reducers/user"; 
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../reducers/user";
 import { useNavigate } from "react-router-dom"; // Pour rediriger vers le profil
-
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -36,19 +33,21 @@ const Login = () => {
           password,
         },
       );
-      // 1. Sauvegarde browser 
+      // 1. Sauvegarde browser
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
 
       // 2. ACTUALISATION REDUX (Ce qui permet l'affichage sur la page Profil)
-      dispatch(setCredentials({
-        user: response.data.user,
-        token: response.data.token
-      }));
+      dispatch(
+        setCredentials({
+          user: response.data.user,
+          token: response.data.token,
+        }),
+      );
 
       // alert("Connexion reussie !");
       // TODO: Redirection vers /home ou /profil
-     navigate("/home");
+      navigate("/home");
     } catch (err: any) {
       setError(err.response?.data?.message || "Erreur de connexion au serveur");
     }
