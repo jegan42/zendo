@@ -13,7 +13,7 @@ import Navbar from "../components/Navbar/Navbar";
 import { Link, useParams } from "react-router-dom";
 import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import ProductModal from "../components/ProductModal/ProductModal";
+import ProductModal from "../components/Modal/ProductModal/ProductModal";
 import { addToCart } from "../services/cartService";
 import { removeFavori } from "../services/favoriService";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";

@@ -14,11 +14,15 @@ interface ProductModalProps {
   isOpen: boolean;
   onClose: () => void;
   // onConfirm doit être une fonction qui reçoit un objet avec les choix de l'utilisateur : { color: string, size: string }
-  onConfirm: (selection: {
-    color: string;
-    size: string;
-    quantity: number;
-  }) => void;
+  onConfirm:
+    | {
+        handleValidation: (selection: {
+          color: string;
+          size: string;
+          quantity: number;
+        }) => void;
+      }
+    | any;
   title: string;
   variations: any[];
 }
@@ -81,14 +85,7 @@ function ProductModal(props: ProductModalProps) {
       return true;
     }
     // je vérifie dans la map des choix si la taille est disponible pour la couleur sélectionnée
-    for (let i = 0; i < props.variations.length; i++) {
-      const variation = props.variations[i];
-      // si la variation correspond à la couleur et à la taille, alors cette taille est disponible pour cette couleur
-      if (variation.color === selectedColor && variation.size === size) {
-        return true;
-      }
-    }
-    return false;
+    return choix.get(selectedColor)?.includes(size) || false;
   }
 
   const handleIncreaseQuantity = () => {
@@ -140,24 +137,24 @@ function ProductModal(props: ProductModalProps) {
                 <button
                   key={size}
                   className={selectedSize === size ? "active" : ""}
-                  onClick={() => setSelectedSize(size)}
-                  disabled={!sizeDisponible(size)}
+                  onClick={function () {
+                    setSelectedSize(size);
+                  }}
+                  disabled={
+                    sizeDisponible(size) ? false : true
+                  } /* Si la taille n'est pas disponible pour la couleur sélectionnée, on disable le bouton */
                 >
                   {size}
                 </button>
               );
             })}
-            {/* Section Quantité*/}
+            {/* Section Tailles */}
             <div className="option-group">
               <label>Quantité :</label>
-              <div className="quantity-selector">
-                <button type="button" onClick={handleDecreaseQuantity}>
-                  -
-                </button>
-                <span className="quantity-value">{selectedQuantity}</span>
-                <button type="button" onClick={handleIncreaseQuantity}>
-                  +
-                </button>
+              <div className="options">
+                <button onClick={handleDecreaseQuantity}>-</button>
+                <span>{selectedQuantity}</span>
+                <button onClick={handleIncreaseQuantity}>+</button>
               </div>
             </div>
           </div>

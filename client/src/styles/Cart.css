@@ -1,0 +1,146 @@
+/* ========================================
+   PAGE CART - Liste des produits du panier
+   ======================================== */
+
+/* Grille du panier */
+.page-cart-list {
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 20px;
+}
+
+/* Item produit */
+.product-item {
+  background-color: #f9f9f9;
+  border-radius: 14px;
+  display: flex;
+  gap: 20px;
+  padding: 15px;
+}
+
+/* Image - prend 50% */
+.product-link {
+  width: 50%;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.product-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Info produit - prend 50% */
+.product-info {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+/* Nom et prix - même ligne */
+.product-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.product-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Ligne du prix */
+.product-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0;
+}
+
+/* Couleur et quantité - même ligne */
+.product-variations-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  gap: 20px;
+}
+
+.product-color {
+  font-weight: 500;
+  color: #333333;
+}
+
+.product-quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.product-quantity-controls button {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #e0e0e0;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.product-quantity-controls button:hover {
+  background-color: #d4a574;
+  border-color: #d4a574;
+  color: #ffffff;
+}
+
+.product-quantity-controls span {
+  font-weight: 600;
+  min-width: 25px;
+  text-align: center;
+}
+
+/* Taille et delete - même ligne */
+.product-size-delete {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.product-size {
+  font-size: 14px;
+  font-weight: 500;
+  color: #666666;
+  margin: 0;
+}
+
+.trash-icon {
+  font-size: 18px;
+  cursor: pointer;
+  color: #d4a574;
+  transition: color 0.2s ease;
+}
+
+.trash-icon:hover {
+  color: #c4834a;
+}
+
+/* Total du panier */
+.cart-total {
+  font-size: 18px;
+  font-weight: 700;
+  text-align: right;
+  margin: 20px 0;
+  color: #000000;
+}
