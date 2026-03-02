@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import CameraAltIcon from "@mui/icons-material/CameraAlt"; // Utilisation de MUI comme ton Login
+import CameraAltIcon from "@mui/icons-material/CameraAlt"; // Utilisation de MUI comme Login
 import "./ProfileHeader.css";
 // importer la photo profil par défaut
 import defaultAvatar from "../../asset/Logo/profil.png"; 

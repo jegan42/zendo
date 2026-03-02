@@ -9,10 +9,14 @@
 // =============================================================
 
 import { Router } from "express";
-import { getSellerHome } from "../controllers/seller";
+import { createSeller, getSellerHome, getSellerInfos, updateSellerInfos} from "../controllers/seller";
 
 const router = Router();
 
 router.get("/:id", getSellerHome);
+router.get("/infos/:id", getSellerInfos);
+router.post("/create/:id", createSeller);
+router.put("/update/:id", updateSellerInfos);   
 
 export default router;
+    

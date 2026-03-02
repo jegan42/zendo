@@ -28,7 +28,7 @@ function SellerHome() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // On recupere le user connecte depuis Redux
+  // Logique User x reduce
   const user = useSelector(function (state: any) {
     return state.user.userInfo;
   });
@@ -58,7 +58,7 @@ function SellerHome() {
         "http://localhost:5001/api/seller/" + user._id,
       );
 
-      // On met a jour les etats avec les donnees recues
+      // On met a jour les state avec les donnees recues
       setProducts(response.data.products);
       setStats(response.data.stats);
     } catch (err: any) {
@@ -102,7 +102,7 @@ function SellerHome() {
     }, 0);
   }
 
-  // -- AFFICHAGE SI PAS CONNECTE --
+  // -- AFFICHAGE SI PAS CONNECT2 --
   if (!user) {
     return (
       <div className="page-container">

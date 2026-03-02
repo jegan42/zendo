@@ -11,6 +11,12 @@ const SellerSchema = new mongoose.Schema(
 
         shopName: { type: String, required: true },
 
+        //  logo de la boutique
+        shopLogo: { 
+            type: String, 
+            default: "" ,
+        },
+
         shopStatus: { type: Boolean, default: true },
 
         siretNumber: { type: String },

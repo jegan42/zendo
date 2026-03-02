@@ -1,61 +1,208 @@
-.info-modal {
-  max-width: 500px ;
-  max-height: 90vh;
-  overflow-y: auto;
-  text-align: left;
+/* L'arrière-plan sombre derrière la modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-.info-section h3 {
-  font-size: 16px;
-  margin: 15px 0;
+/* La fenêtre Modal */
+.modal-content.info-modal-container {
+  background: white;
+  width: 600px; /* Largeur augmentée */
+  max-width: 95%;
+  max-height: 80vh; /* Hauteur réduite pour éviter l'aspect trop long */
+  border-radius: 12px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
 
+/* Titre principal de la Modal */
+.modal-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: left; /* Aligné à gauche */
   color: #1a1a1a;
 }
 
+/* Zone scrollable si le contenu dépasse */
+.info-section-wrapper {
+  overflow-y: auto; /* Active la barre de défilement */
+  padding-right: 10px; /* Espace pour la barre */
+  flex: 1;
+}
+
+/* Stylisation de la barre de défilement (Scrollbar) */
+.info-section-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+.info-section-wrapper::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 10px;
+}
+
+/* Sections (Informations / Adresse) */
+.info-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Force l'alignement à gauche */
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.info-section h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 15px 0;
+  color: #1a1a1a;
+  text-align: left;
+  width: 100%;
+}
+
+/* Groupes d'input */
 .input-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 12px;
+  align-items: flex-start; /* Label à gauche */
+  margin-bottom: 15px;
+  width: 100%;
 }
 
 .input-group label {
   font-size: 13px;
   font-weight: 600;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   color: #666;
 }
 
-.input-group input, .input-group select {
-  padding: 10px;
-  border: 1px solid #ddd;
+.input-group input, 
+.input-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
   font-size: 14px;
+  background-color: #fff;
+  box-sizing: border-box;
 }
 
+/* Téléphone spécifique */
+.phone-input-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.phone-input-row select {
+  width: 100px;
+  flex-shrink: 0;
+}
+
+/* Rangée Ville / CP */
+.input-row-flex {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+}
+
+.input-group.half {
+  flex: 1;
+}
+
+
+/* Boutons en bas (fixes) */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
+}
 .disabled-input {
-  background-color: #f0f0f0;
-  color: #888;
+  background-color: #f5f5f5;
+  color: #999;
   cursor: not-allowed;
 }
 
-.phone-input-container {
+.modal-close-button {
+  position: absolute;
+  top: 15px; /* Distance du haut */
+  right: 15px; /* Distance de la droite */
+  background: transparent;
+  border: none;
+  font-size: 28px; /* Taille du 'X' */
+  line-height: 1;
+  color: #888; /* Couleur grise */
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+  z-index: 10; /* Assure que le bouton reste au-dessus du contenu */
+}
+
+/* Changement de couleur au survol */
+.modal-close-button:hover {
+  color: #333; /* Plus sombre au survol */
+}
+
+/*  Le conteneur de la modal doit être en position relative */
+.modal-content.info-modal-container {
+  /* ... (tes autres règles existantes) */
+  position: relative; /* Indispensable pour la croix en absolute */
+}
+
+.profile-header-container {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 0;
 }
 
-.phone-input-container select {
-  width: 80px;
+.avatar-wrapper {
+  position: relative;
+  width: 110px;
+  height: 110px;
 }
 
-.phone-input-container input {
-  flex: 1;
-}
-
-.input-row {
+.avatar-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #d9d9d9; /* Gris identique à ton image */
   display: flex;
-  gap: 15px;
+  justify-content: center;
+  align-items: center;
 }
 
-.input-row .input-group {
-  flex: 1;
+.avatar-circle img {
+  width: 80%;
+  height: 80%;
+  object-fit: cover;
+}
+
+.photo-edit-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #000000; /* Fond noir */
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }

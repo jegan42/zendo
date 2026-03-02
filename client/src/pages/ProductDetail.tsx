@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Button from "../components/Button/Button";
 import { Header } from "../components/Header/Header";
 import Navbar from "../components/Navbar/Navbar";
-import "../styles/Pages.css";
 import "../styles/ProductDetail.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -31,7 +30,7 @@ function ProductDetail() {
       quantity: 0,
     },
   ]);
-  // set la donnée favori pour afficher le coeur plein ou vide
+  // set la donnée favorie pour afficher le coeur plein ou vide
   const [isFavori, setIsFavori] = useState(false);
   // set les favoris de l'utilisateur pour vérifier si le produit est dans les favoris ou pas
   const [userFavori, setUserFavori] = useState([]);
@@ -41,12 +40,6 @@ function ProductDetail() {
   const { id } = useParams();
   // set le message d'ajout ou de suppression du panier
   const [message, setMessage] = useState("");
-  // set l'état pour stocker la couleur sélectionnée par l'utilisateur
-  const [selectedColor, setSelectedColor] = useState("");
-  // set l'état pour stocker la taille sélectionnée par l'utilisateur
-  const [selectedSize, setSelectedSize] = useState("");
-  // set l'état pour stocker la quantité sélectionnée par l'utilisateur
-  const [selectedQuantity, setSelectedQuantity] = useState(1);
   // set l'état pour afficher ou non le modal de sélection des variations
   const [showModal, setShowModal] = useState(false);
 
@@ -135,86 +128,27 @@ function ProductDetail() {
     }
   };
 
-  // Pour chaque variation du produit, on recupere les couleurs et les tailles disponibles pour les afficher dans la modal
-  // On utilise un Set pour ne pas avoir de doublons dans les listes de couleurs et tailles
-  const colors = [...new Set(variations.map((variation) => variation.color))];
-  const sizes = [...new Set(variations.map((variation) => variation.size))];
-
-  const choix = new Map<string, string[]>();
-  // je parcours les variations du produit pour construire une map des choix possibles : { "Rouge" => ["S", "M"], "Bleu" => ["M", "L"] }
-  for (let i = 0; i < variations.length; i++) {
-    const variation = variations[i];
-    // si la couleur n'est pas encore dans la map, je l'ajoute avec une liste de tailles vide
-    if (!choix.has(variation.color)) {
-      choix.set(variation.color, []);
-    }
-    // j'ajoute la taille de la variation à la liste des tailles disponibles pour cette couleur
-    const existingSizes = choix.get(variation.color) || [];
-    // je vérifie que la taille n'est pas déjà dans la liste avant de l'ajouter
-    if (!existingSizes.includes(variation.size)) {
-      existingSizes.push(variation.size);
-      choix.set(variation.color, existingSizes);
-    }
-  }
-
-  // fonction pour vérifier si une taille est disponible pour la couleur sélectionnée
-  function sizeDisponible(size: string) {
-    // si aucune couleur n'est sélectionnée, toutes les tailles sont disponibles
-    if (!selectedColor) {
-      return true;
-    }
-    // je vérifie dans la map des choix si la taille est disponible pour la couleur sélectionnée
-    return choix.get(selectedColor)?.includes(size) || false;
-  }
-
-  // fonction pour vérifier si une couleur est disponible pour la taille sélectionnée
-  function colorDisponible(color: string) {
-    return selectedSize === "" || choix.get(color)?.includes(selectedSize);
-  }
-
-  // fonction qui retourne les options de tailles disponibles pour la couleur sélectionnée
-  const disponibleSizes = () => {
-    return sizes.filter(sizeDisponible).map((size) => (
-      <option key={size} value={size}>
-        {size}
-      </option>
-    ));
-  };
-
-  // fonction qui retourne les options de couleurs disponibles pour le produit
-  const disponibleColors = () => {
-    return colors.filter(colorDisponible).map((color) => (
-      <option key={color} value={color}>
-        {color}
-      </option>
-    ));
-  };
-
-  const handleIncreaseQuantity = () => {
-    if (selectedQuantity < 10) {
-      setSelectedQuantity(selectedQuantity + 1);
-    }
-  };
-  const handleDecreaseQuantity = () => {
-    if (selectedQuantity > 1) {
-      setSelectedQuantity(selectedQuantity - 1);
-    }
-  };
-
   // fonction pour ajouter un produit dans le panier de l'utilisateur
-  const handleAddCartClick = () => {
-    addToCart(product._id, selectedColor, selectedSize, selectedQuantity).then(
-      (message) => {
+  const handleAddCartClick = (
+    color: string,
+    size: string,
+    quantity: number,
+  ) => {
+    // si je n'ai pas d'id je ne fetch pas
+    if (!product?._id) return;
+    // si le modal de sélection des variations est ouvert, j'ajoute le produit au panier de l'utilisateur avec les variations sélectionnées
+    if (showModal) {
+      addToCart(product._id, color, size, quantity).then((message) => {
         setError(message);
-      },
-    );
+      });
+    }
   };
 
   return (
     <div>
       <Header />
 
-      <div className="page-container">
+      <div className="product-detail-container">
         <div className="product-image">
           <img src={firstImage()} alt="Product" />
         </div>
@@ -238,25 +172,18 @@ function ProductDetail() {
         </div>
 
         <div className="product-description-container">
-          <h3>A propos</h3>
           <p className="product-description">{product?.description || ""}</p>
         </div>
-        <div className="product-variations">
-          <select onChange={(e) => setSelectedColor(e.target.value)}>
-            <option value="">---Veuillez choisir une couleur---</option>
-            {disponibleColors()}
-          </select>
-          <select onChange={(e) => setSelectedSize(e.target.value)}>
-            <option value="">---Veuillez choisir une taille---</option>
-            {disponibleSizes()}
-          </select>
-        </div>
-        <div className="quantity-selector">
-          <button onClick={handleDecreaseQuantity}>-</button>
-          <span>{selectedQuantity}</span>
-          <button onClick={handleIncreaseQuantity}>+</button>
-          <Button onClick={handleAddCartClick}>Ajouter au panier</Button>
-        </div>
+        <ProductModal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          onConfirm={({ color, size, quantity }: any) => {
+            handleAddCartClick(color, size, quantity);
+          }}
+          title="Choisissez une variation"
+          variations={variations}
+        />
+        <Button onClick={() => setShowModal(true)}>Ajouter au panier</Button>
       </div>
 
       <Navbar />

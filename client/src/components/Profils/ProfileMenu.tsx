@@ -4,15 +4,23 @@ import RedeemIcon from "@mui/icons-material/Redeem";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import "./ProfileMenu.css";
 import UserInfosModal from "../Modal/UserInfoMoal/UserInfoModal";
+import ShopInfoModal from "../Modal/ShopInfoModal/ShopInfoModal";
 
 const ProfileMenu = () => {
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const [isShopModalOpen, setIsShopModalOpen] = useState(false);
+
+  //  Fonction pour fermer la modal proprement
+  const handleCloseModal = () => {
+    setIsInfoModalOpen(false);
+    setIsShopModalOpen(false);
+  };
 
   const menuItems = [
     {
       icon: <PersonOutlineIcon />,
       label: "Informations personnelles",
-      // On ajoute une fonction onClick uniquement pour cet item
+      // On déclenche l'ouverture de la modal info ici
       action: () => setIsInfoModalOpen(true),
     },
     {
@@ -23,7 +31,8 @@ const ProfileMenu = () => {
     {
       icon: <StorefrontIcon />,
       label: "Ouvrir ma boutique",
-      link: "/vendeur",
+      // On déclenche l'ouverture de la modal boutique ici
+      action: () => setIsShopModalOpen(true),
     },
   ];
 
@@ -35,7 +44,8 @@ const ProfileMenu = () => {
           <div
             key={index}
             className="menu-item"
-            onClick={item.action ? item.action : undefined} // Déclenche la modal si l'action existe
+            onClick={item.action ? item.action : undefined}
+            style={{ cursor: item.action ? "pointer" : "default" }} // Déclenche la modal si l'action existe
           >
             <div className="menu-item-left">
               <span className="menu-icon">{item.icon}</span>
@@ -45,11 +55,9 @@ const ProfileMenu = () => {
         ))}
       </div>
 
-      {/* INDISPENSABLE : Appeler le composant ici pour qu'il puisse s'afficher */}
-      <UserInfosModal
-        isOpen={isInfoModalOpen}
-        onClose={() => setIsInfoModalOpen(false)}
-      />
+      {/* Appeler le composant ici pour qu'il puisse s'afficher */}
+      <UserInfosModal isOpen={isInfoModalOpen} onClose={handleCloseModal} />
+      <ShopInfoModal isOpen={isShopModalOpen} onClose={handleCloseModal} />
     </div>
   );
 };

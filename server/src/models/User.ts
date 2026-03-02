@@ -39,7 +39,7 @@ const UserSchema = new mongoose.Schema(
     // Role de l'utilisateur : acheteur par defaut
     // Peut etre "buyer" (acheteur), "seller" (vendeur) ou "admin"
     role: {
-      type: String,
+      type: [String],
       enum: ["buyer", "seller", "admin"],
       default: "buyer", // si on ne precise pas, c'est "buyer"
     },

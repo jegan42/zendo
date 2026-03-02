@@ -1,8 +1,10 @@
 import { Router } from "express";
-import { upsertAddress } from "../controllers/address";
+import { upsertAddress,getAddressByUserId } from "../controllers/address";
 
 const router = Router();
 
 router.post("/save/:userId", upsertAddress);
+router.get("/:userId", getAddressByUserId);
+
 
 export default router;
