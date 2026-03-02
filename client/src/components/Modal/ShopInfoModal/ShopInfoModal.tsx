@@ -1,29 +1,105 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../Button/Button";
 import "../UserInfoMoal/UserInfoModal.css";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 import defaultLogo from "../../../asset/Logo/Logo.png";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { setCredentials } from "../../../reducers/user";
+import { jwtDecode } from "jwt-decode";
 
 interface ShopInfoModalProps {
   isOpen: boolean;
   onClose: () => void;
   isFirstTime?: boolean; // Pour gérer le texte du bouton
+  onSuccess: () => void; // Ajout de la prop
 }
 
 const ShopInfoModal = ({
   isOpen,
   onClose,
-  isFirstTime = true,
+  isFirstTime,
+  onSuccess,
 }: ShopInfoModalProps) => {
+  const { userInfo: user, token } = useSelector((state: any) => state.user);
+  const dispatch = useDispatch();
+
   const [shopName, setShopName] = useState("");
   const [siretNumber, setSiretNumber] = useState("");
+  const [shopLogo, setShopLogo] = useState("");
 
+  // CHARGEMENT DES DONNÉES (si c'est une modification)
+  useEffect(() => {
+    const loadShopData = async () => {
+      if (isOpen && !isFirstTime && user?._id) {
+        try {
+          const response = await axios.get(`http://localhost:5001/api/seller/infos/${user._id}`);
+          if (response.data) {
+            setShopName(response.data.shopName || "");
+            setSiretNumber(response.data.siretNumber || "");
+            setShopLogo(response.data.shopLogo || "");
+          }
+        } catch (error) {
+          console.error("Erreur lors du chargement des infos boutique :", error);
+        }
+      } else if (isOpen && isFirstTime) {
+        // Reset des champs si on ouvre pour une création
+        setShopName("");
+        setSiretNumber("");
+        setShopLogo("");
+      }
+    };
+    loadShopData();
+  }, [isOpen, isFirstTime, user?._id]);
+
+
+ const handleSave = async () => {
+  // 1. Essayer de récupérer l'ID via Redux
+  let userId = user?._id || user?.id;
+
+  // 2. Si toujours rien, décoder le token
+  if (!userId && token) {
+    try {
+      const decoded: any = jwtDecode(token);
+      userId = decoded.id || decoded._id || decoded.userId;
+    } catch (e) {
+      console.error("Erreur décodage token", e);
+    }
+  }
+
+  // 3. Validation finale
+  if (!userId) {
+    alert("Erreur : ID utilisateur introuvable. Veuillez vous reconnecter.");
+    return;
+  }
+
+  console.log("ID utilisé pour la requête :", userId);
+
+  try {
+    const payload = { shopName, siretNumber, shopLogo };
+
+    if (isFirstTime) {
+      const res = await axios.post(
+        `http://localhost:5001/api/seller/create/${userId}`, // Utilisation de userId local
+        payload
+      );
+      dispatch(setCredentials({ user: res.data.user, token }));
+      onSuccess();
+      alert("Boutique créée !");
+    } else {
+      await axios.put(
+        `http://localhost:5001/api/seller/update/${userId}`,
+        payload
+      );
+      alert("Modifications enregistrées !");
+    }
+    onClose();
+  } catch (error: any) {
+    console.error(error);
+    alert(error.response?.data?.message || "Erreur serveur");
+  }
+};
   if (!isOpen) return null;
-
-  const handleSave = () => {
-    // Logique de sauvegarde à venir (Backend)
-    console.log({ shopName, siretNumber });
-  };
 
   return (
     <div className="modal-overlay">
