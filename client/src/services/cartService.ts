@@ -29,4 +29,27 @@ const addToCart = (
     });
 };
 
-export { addToCart };
+const updateCartItem = (
+  // je récupere l'id du produit, du cart item et les choix de l'utilisateur (couleur, taille, quantité) pour les envoyer à l'API
+  productId: string,
+  cartItemId: string,
+  selectedQuantity: number,
+) => {
+  // j'envoie une requete PUT à l'API pour mettre à jour le produit dans le panier de l'utilisateur
+  return fetch(`http://localhost:5001/api/cart/${productId}/${cartItemId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+    body: JSON.stringify({
+      quantity: selectedQuantity,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return data.message;
+    });
+};
+
+export { addToCart, updateCartItem };
