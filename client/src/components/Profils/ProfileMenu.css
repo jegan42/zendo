@@ -74,3 +74,25 @@
   color: #888; /* Gris pour la langue sélectionnée */
   font-size: 14px;
 }
+
+.toggle-switch {
+  width: 40px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.toggle-switch.active { background-color: #4caf50; }
+.toggle-switch .thumb {
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: 0.3s;
+}
+.toggle-switch.active .thumb { left: 22px; }

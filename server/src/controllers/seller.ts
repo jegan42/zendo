@@ -105,7 +105,7 @@ async function createSeller(req: Request, res: Response) {
     const userId = req.params.id;
     
     // 2. Récupération des infos depuis le body
-    const { shopName, siretNumber } = req.body;
+    const { shopName, siretNumber , shopLogo} = req.body;
 
     if (!userId) {
       return res.status(400).json({ message: "ID utilisateur manquant dans l'URL" });
@@ -120,6 +120,7 @@ async function createSeller(req: Request, res: Response) {
       userId: userId,
       shopName: shopName,
       siretNumber: siretNumber,
+      shopLogo: shopLogo,
       shopStatus: true
     });
 
