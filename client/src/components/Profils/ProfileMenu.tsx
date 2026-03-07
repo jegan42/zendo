@@ -42,16 +42,27 @@ const ProfileMenu = () => {
     checkSellerStatus();
   }, [user?._id, user?.id]);
 
-  const handleToggleStatus = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // Empêche d'ouvrir la modal en cliquant sur le toggle
+const handleToggleStatus = async (e: React.MouseEvent) => {
+    e.stopPropagation(); 
+    
+    // CORRECTION : Récupérer l'ID de manière sécurisée
+    const userId = user?._id || user?.id;
+
+    if (!userId) {
+      console.error("ID utilisateur introuvable pour le toggle");
+      return;
+    }
+
     try {
       const newStatus = !shopStatus;
-      await axios.put(`http://localhost:5001/api/seller/update/${user._id}`, {
+      // Utilisation de userId au lieu de user._id
+      await axios.put(`http://localhost:5001/api/seller/update/${userId}`, {
         shopStatus: newStatus,
       });
       setShopStatus(newStatus);
     } catch (error) {
       console.error("Erreur update status", error);
+      alert("Impossible de changer le statut de la boutique.");
     }
   };
 

@@ -31,26 +31,38 @@ const ShopInfoModal = ({
   // CHARGEMENT DES DONNÉES (si c'est une modification)
   useEffect(() => {
     const loadShopData = async () => {
-      if (isOpen && !isFirstTime && user?._id) {
+      if (!isOpen) return;
+
+      // Récupération de l'ID de sécurité (Redux ou Token)
+      let userId = user?._id || user?.id;
+      if (!userId && token) {
         try {
-          const response = await axios.get(`http://localhost:5001/api/seller/infos/${user._id}`);
+          const decoded: any = jwtDecode(token);
+          userId = decoded.id || decoded._id || decoded.userId;
+        } catch (e) { console.error(e); }
+      }
+
+      if (userId) {
+        try {
+          const response = await axios.get(`http://localhost:5001/api/seller/infos/${userId}`);
+          // Si le backend renvoie des données, on remplit les champs
           if (response.data) {
             setShopName(response.data.shopName || "");
             setSiretNumber(response.data.siretNumber || "");
             setShopLogo(response.data.shopLogo || "");
+          } else {
+            // Si pas de boutique, on vide les champs (cas création)
+            setShopName("");
+            setSiretNumber("");
+            setShopLogo("");
           }
         } catch (error) {
           console.error("Erreur lors du chargement des infos boutique :", error);
         }
-      } else if (isOpen && isFirstTime) {
-        // Reset des champs si on ouvre pour une création
-        setShopName("");
-        setSiretNumber("");
-        setShopLogo("");
       }
     };
     loadShopData();
-  }, [isOpen, isFirstTime, user?._id]);
+  }, [isOpen, user?._id, user?.id, token]);
 
 
  const handleSave = async () => {

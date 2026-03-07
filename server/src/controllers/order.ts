@@ -8,9 +8,10 @@ import Variation from "../models/Variation";
 import User from "../models/User";
 import { getUserFromHeaders } from "./utils";
 import { Types } from "mongoose";
+import Order from "../models/Order";
 
 // ---------------------------------------------------------
-// DETAIL ORDER
+// RÉCUPÉRER UNE COMMANDE PAR ORDER ID
 // Route : GET /api/orders/:orderId
 // ---------------------------------------------------------
 
@@ -18,6 +19,13 @@ import { Types } from "mongoose";
 
 async function getOrder(req: Request, res: Response) {}
 
+// ---------------------------------------------------------
+// RÉCUPÉRER TOUTES LES COMMANDES D'UN UTILISATEUR
+// Route : GET /api/orders/:id (user id)
+// ---------------------------------------------------------
+
+ async function getOrderById(req: Request, res: Response) {}
+  
 // ---------------------------------------------------------
 // AJOUT ORDER
 // Route : POST /api/orders/:orderId
@@ -58,4 +66,4 @@ async function addOrder(req: Request, res: Response) {
 // à créer une fois que les commandes seront implémentées dans la base de données
 async function deleteOrder(req: Request, res: Response) {}
 
-export { addOrder, deleteOrder, getOrder };
+export { addOrder, deleteOrder, getOrder, getOrderById };
