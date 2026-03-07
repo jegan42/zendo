@@ -27,6 +27,7 @@ import Shop from "./pages/Shop";
 import ProductList from "./pages/ProductList";
 import Cart from "./pages/Cart";
 import SellerHome from "./pages/Seller/SellerHome";
+import Paiement from "./pages/Paiement";
 
 // --- Composants ---
 import Navbar from "./components/Navbar/Navbar";
@@ -86,6 +87,7 @@ function AppContent() {
         <Route path="*" element={<Navigate to="/login" />} />
         <Route path="/produit/:id" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/paiement" element={<Paiement />} />
       </Routes>
 
       {/* On affiche la Navbar seulement si on est PAS sur une page d'auth */}

@@ -16,6 +16,7 @@ import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { updateCartItem } from "../services/cartService";
+import { addOrder } from "../services/oderService";
 
 function Cart() {
   // ETATS & HOOKS
@@ -126,6 +127,21 @@ function Cart() {
       .catch(() => {});
   };
 
+  const totalPrice = cart.reduce(
+    (total, item) =>
+      total + (item.productData?.price || 0) * (item.quantity || 0),
+    0,
+  );
+
+  const handlePaymentClick = () => {
+    addOrder(totalPrice).then((message) => {
+      if (message === "Commande créée avec succès") {
+        setCart([]);
+        window.location.href = "/paiement";
+      }
+    });
+  };
+
   return (
     <div className="page-container">
       <Header />
@@ -134,16 +150,8 @@ function Cart() {
         <div className="page-cart">
           <div className="page-cart-list">{cartList()}</div>
         </div>
-        <p className="cart-total">
-          Total :{" "}
-          {cart.reduce(
-            (total, item) =>
-              total + (item.productData?.price || 0) * (item.quantity || 0),
-            0,
-          )}
-          €
-        </p>
-        <Button>Paiement</Button>
+        <p className="cart-total">Total : {totalPrice}€</p>
+        <Button onClick={handlePaymentClick}>Paiement</Button>
       </div>
       <Navbar />
     </div>
