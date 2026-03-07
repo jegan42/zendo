@@ -7,7 +7,6 @@ import variationRoutes from "./variation";
 import favorisRoutes from "./favoris";
 import cartRoutes from "./cart";
 import sellerRoutes from "./seller";
-import userRoutes from "./user";
 import addressRoutes from "./address";
 import orderRoutes from "./order";
 
