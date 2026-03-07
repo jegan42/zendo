@@ -17,6 +17,7 @@ import cartRoutes from "./routes/cart";
 import sellerRoutes from "./routes/seller";
 import userRoutes from "./routes/user";
 import addressRoutes from "./routes/address";
+import orderRoutes from "./routes/order";
 
 // Charge depuis le .env
 // (MONGO_URI, JWT_SECRET, PORT)
@@ -66,7 +67,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/address", addressRoutes);
 
 // Routes orders : POST /api/orders/create (creer une commande)
-app.use("/api/orders", require("./routes/order"));
+app.use("/api/orders", orderRoutes);
 
 // Route de test pour verifier que le serveur fonctionne
 // http://localhost:5000

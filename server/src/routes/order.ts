@@ -5,10 +5,10 @@ import { addOrder, deleteOrder, getOrder } from "../controllers/order";
 const router = Router();
 
 // Quand on recoit un POST sur /orders/:id, on appelle la fonction order du controller
-router.post("/:productId", addOrder);
+router.post("/", addOrder);
 
 // Quand on recoit un DELETE sur /orders/:id, on appelle la fonction order du controller
-router.delete("/:productId", deleteOrder);
+router.delete("/:orderId", deleteOrder);
 
 // Quand on recoit un GET sur /orders, on appelle la fonction order du controller
 router.get("/", getOrder);

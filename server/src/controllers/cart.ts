@@ -29,11 +29,9 @@ async function addCartItem(req: Request, res: Response) {
     }
     // Etape 3 check que les variations sont renseignées
     if (!size || !color || !quantity) {
-      return res
-        .status(400)
-        .json({
-          message: "Veuillez renseigner la taille, la couleur et la quantité",
-        });
+      return res.status(400).json({
+        message: "Veuillez renseigner la taille, la couleur et la quantité",
+      });
     }
     // Etape 3 : mise à jour du panier de l'utilisateur en ajoutant le produit avec la variation choisie
     const user = await User.findById({ _id: userId });
