@@ -8,18 +8,19 @@
 
 import { Router } from "express";
 import { addFavori, deleteFavori, getFavori } from "../controllers/favoris";
+import { authMiddleware } from "../middleware/authMiddleware";
 
 // On cree un "routeur" Express
 const router = Router();
 
 // Quand on recoit un POST sur /favoris/:id, on appelle la fonction favori du controller
-router.post("/:productId", addFavori);
+router.post("/:productId", authMiddleware, addFavori);
 
 // Quand on recoit un DELETE sur /favoris/:id, on appelle la fonction favori du controller
-router.delete("/:productId", deleteFavori);
+router.delete("/:productId", authMiddleware, deleteFavori);
 
 // Quand on recoit un GET sur /favoris, on appelle la fonction favori du controller
-router.get("/", getFavori);
+router.get("/", authMiddleware, getFavori);
 
 // On exporte le routeur pour l'utiliser dans index.ts
 export default router;
