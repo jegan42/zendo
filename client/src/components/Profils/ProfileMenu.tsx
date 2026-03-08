@@ -7,8 +7,10 @@ import UserInfosModal from "../Modal/UserInfoMoal/UserInfoModal";
 import ShopInfoModal from "../Modal/ShopInfoModal/ShopInfoModal";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const ProfileMenu = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { userInfo: user, token } = useSelector((state: any) => state.user);
 
@@ -81,7 +83,8 @@ const handleToggleStatus = async (e: React.MouseEvent) => {
     {
       icon: <RedeemIcon />,
       label: "Mes commandes",
-      link: "/orders",
+      // On navigue vers la page des commandes
+      action: () => navigate("/orders"),
     },
     {
       icon: <StorefrontIcon />,

@@ -41,6 +41,8 @@ export function Header() {
       setHeaderTitle("Menu");
     } else if (pathname === "/profil") {
       setHeaderTitle("Profil");
+    } else if (pathname === "/orders") {
+      setHeaderTitle("Commandes");
     } else if (pathname === "/favoris") {
       setHeaderTitle("Favoris");
     } else {

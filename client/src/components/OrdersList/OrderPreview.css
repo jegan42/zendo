@@ -1,0 +1,105 @@
+/* --- Composant OrderPreview (La Carte) --- */
+.order-preview-card {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: transparent;
+}
+
+.order-id-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.order-action-row {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.info-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  font-weight: 700;
+  color: #1a1a1a;
+  font-size: 14px;
+}
+
+.info-value {
+  color: #333;
+  font-size: 15px;
+}
+
+.price-large {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.order-grid-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* --- Boutons --- */
+.btn-view-order {
+  background-color: #EBD6B9;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-track {
+  background: none;
+  border: none;
+  font-weight: 800;
+  color: #1a1a1a;
+  cursor: pointer;
+  padding: 0;
+}
+
+.package-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+.order-divider {
+  border: 0;
+  height: 1px;
+  background-color: #ccc;
+  margin: 15px 0;
+  width: 100%;
+}
+
+/* --- ADAPTATION DESKTOP & MOBILE POUR LE COMPOSANT --- */
+@media (min-width: 768px) {
+  .order-preview-card {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+
+  .order-divider {
+    display: none; 
+  }
+}
+
+@media (max-width: 600px) {
+  .order-action-row {
+    justify-content: center;
+  }
+}

@@ -19,7 +19,7 @@ const ProfileSettings = () => {
   };
 
   return (
-    <div className="profile-section">
+    <div className="profile-menu-container">
       <h3 className="section-title">Paramètres de votre profil</h3>
       <div className="white-card">
         

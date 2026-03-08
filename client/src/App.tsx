@@ -28,6 +28,7 @@ import ProductList from "./pages/ProductList";
 import Cart from "./pages/Cart";
 import SellerHome from "./pages/Seller/SellerHome";
 import Paiement from "./pages/Paiement";
+import OrdersList from "./pages/OrdersList";
 
 // --- Composants ---
 import Navbar from "./components/Navbar/Navbar";
@@ -72,6 +73,9 @@ function AppContent() {
 
         {/* --- Route produit (avant les catch-all dynamiques) --- */}
         <Route path="/produit/:id" element={<ProductDetail />} />
+
+        {/* --- Route commandes --- */}
+        <Route path="/orders" element={<OrdersList />} />
 
         {/* --- Route vendeur --- */}
         <Route path="/vendeur" element={<SellerHome />} />
