@@ -2,6 +2,7 @@ import "../styles/Pages.css";
 import { Header } from "../components/Header/Header";
 import Navbar from "../components/Navbar/Navbar";
 import { useEffect, useState } from "react";
+import api from "../services/api";
 
 interface Product {
     _id: string;
@@ -28,28 +29,32 @@ function StoreProductList({ sellerId }: StoreProductListProps) {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const controller = new AbortController(); // pour annuler si le composant se démonte
-        setLoading(true);
-        setError(null);
+        let isCancelled = false;
 
-        fetch(`http://localhost:5001/api/products?sellerId=${sellerId}`, {
-            method: "GET",
-            headers: {
-                Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-            signal: controller.signal,
-        })
-            .then((response) => {
-                if (!response.ok) throw new Error("Erreur lors du fetch");
-                return response.json();
-            })
-            .then((data) => setProducts(data.products || []))
-            .catch((err) => {
-                if (err.name !== "AbortError") setError(err.message);
-            })
-            .finally(() => setLoading(false));
+        const fetchProducts = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const response = await api.get<{ products: Product[] }>(
+                    `/products?sellerId=${sellerId}`
+                );
 
-        return () => controller.abort(); // annule la requête si on quitte la page
+                if (!isCancelled) {
+                    setProducts(response.data.products || []);
+                }
+            } catch (err: any) {
+                if (!isCancelled)
+                    setError(err.message || "Erreur lors du fetch");
+            } finally {
+                if (!isCancelled) setLoading(false);
+            }
+        };
+
+        fetchProducts();
+
+        return () => {
+            isCancelled = true; // annule la mise à jour si le composant se démonte
+        };
     }, [sellerId]);
 
     return (
