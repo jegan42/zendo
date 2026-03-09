@@ -31,7 +31,12 @@ function ProductCard(props: ProductCardProps) {
       )}
       <div className="product-card-info">
         <h3 className="product-card-name">{props.product.name}</h3>
-        <p className="product-card-price">{props.product.price} EUR</p>
+        <p className="product-card-price">
+          {props.product.variations && props.product.variations.length > 0
+            ? Math.min(...props.product.variations.map((v: any) => v.price ?? 0)).toFixed(2)
+            : "0.00"}{" "}
+          EUR
+        </p>
         {props.product.madeInFrance && (
           <span className="product-card-badge">Made in France</span>
         )}

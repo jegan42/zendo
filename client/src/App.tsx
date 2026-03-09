@@ -26,10 +26,12 @@ import Profil from "./pages/Profil";
 import Shop from "./pages/Shop";
 import ProductList from "./pages/ProductList";
 import Cart from "./pages/Cart";
-import SellerHome from "./pages/Seller/SellerHome";
 import Paiement from "./pages/Paiement";
 import OrdersList from "./pages/OrdersList";
 import StoreProductList from "./pages/StoreProductList";
+import SellerHome from "./pages/Seller/SellerHome";
+import SellerAddProduct from "./pages/Seller/SellerAddProduct";
+import SellerEditProduct from "./pages/Seller/SellerEditProduct";
 
 // --- Composants ---
 import Navbar from "./components/Navbar/Navbar";
@@ -75,11 +77,20 @@ function AppContent() {
         {/* --- Route produit (avant les catch-all dynamiques) --- */}
         <Route path="/produit/:id" element={<ProductDetail />} />
 
+        {/* --- Route panier + paiement --- */}
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/paiement" element={<Paiement />} />
+
         {/* --- Route commandes --- */}
         <Route path="/orders" element={<OrdersList />} />
 
-        {/* --- Route vendeur --- */}
+        {/* --- Route boutique vendeur (liste produits) --- */}
+        <Route path="/storeProductList" element={<StoreProductList />} />
+
+        {/* --- Routes vendeur --- */}
         <Route path="/vendeur" element={<SellerHome />} />
+        <Route path="/vendeur/ajouter-produit" element={<SellerAddProduct />} />
+        <Route path="/vendeur/modifier-produit/:id" element={<SellerEditProduct />} />
 
         {/* --- Routes dynamiques (ProductList par famille/categorie) --- */}
         {/* IMPORTANT : ces routes doivent etre APRES les routes fixes
@@ -90,10 +101,6 @@ function AppContent() {
         {/* Plus tard on pourra rediriger vers /accueil si l'utilisateur est connecte */}
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="*" element={<Navigate to="/login" />} />
-        <Route path="/produit/:id" element={<ProductDetail />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/paiement" element={<Paiement />} />
-        <Route path="/storeProductList" element={<StoreProductList />} />
       </Routes>
 
       {/* On affiche la Navbar seulement si on est PAS sur une page d'auth */}
@@ -106,7 +113,7 @@ function App() {
   return (
     // BrowserRouter : active le systeme de routing (navigation entre pages)
     // Grace a lui on remplace le composant appele sans reload
-    <Provider store={store}>
+   <Provider store={store}>
       <BrowserRouter>
         <AppContent />
       </BrowserRouter>

@@ -1,0 +1,292 @@
+/* =============================================================
+   SELLER ADD PRODUCT - Formulaire creation produit
+   Reprend les couleurs et le style de SellerHome
+   ============================================================= */
+
+/* -- En-tete avec bouton retour -- */
+.seller-add-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.seller-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: #3b5998;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.seller-back-btn:hover {
+    background-color: rgba(59, 89, 152, 0.08);
+}
+
+/* -- Message d'erreur -- */
+.seller-add-error {
+    background-color: #fdecea;
+    color: #e57373;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+/* -- Formulaire -- */
+.seller-add-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 100px;
+}
+
+/* -- Carte / section -- */
+.seller-add-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.seller-add-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.seller-add-section-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 16px 0;
+}
+
+.seller-add-hint {
+    font-size: 13px;
+    color: #8e8e9a;
+    margin: 0 0 14px 0;
+}
+
+/* -- Champs de formulaire -- */
+.seller-add-field {
+    margin-bottom: 14px;
+}
+
+.seller-add-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 6px;
+}
+
+.seller-add-input,
+.seller-add-select,
+.seller-add-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: "Segoe UI", sans-serif;
+    background-color: #fff;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.seller-add-input:focus,
+.seller-add-select:focus,
+.seller-add-textarea:focus {
+    outline: none;
+    border-color: #3b5998;
+}
+
+.seller-add-textarea {
+    resize: vertical;
+}
+
+/* -- Ligne 2 champs cote a cote -- */
+.seller-add-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.seller-add-half {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* -- Checkbox Made in France -- */
+.seller-add-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.seller-add-checkbox-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #3b5998;
+    cursor: pointer;
+}
+
+.seller-add-checkbox-label {
+    font-size: 14px;
+    color: #1a1a2e;
+    cursor: pointer;
+}
+
+/* -- Bouton ajouter une variation -- */
+.seller-add-variation-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: 1px solid #3b5998;
+    color: #3b5998;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.seller-add-variation-btn:hover {
+    background-color: rgba(59, 89, 152, 0.08);
+}
+
+/* -- Bloc de variation (une couleur) -- */
+.seller-variation-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 14px;
+    background-color: #faf8f5;
+    border-radius: 8px;
+}
+
+/* Ligne du haut : couleur + prix + stock + supprimer */
+.seller-variation-top {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.seller-variation-top .seller-add-input {
+    flex: 1;
+}
+
+/* Ligne du bas : checkboxes tailles */
+.seller-variation-sizes {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.seller-variation-sizes-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    white-space: nowrap;
+}
+
+/* Chips de taille (boutons toggle) */
+.seller-size-chips {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.seller-size-chip {
+    padding: 6px 14px;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    background-color: #ffffff;
+    color: #8e8e9a;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.seller-size-chip:hover {
+    border-color: #3b5998;
+    color: #3b5998;
+}
+
+/* Taille cochee = active */
+.seller-size-chip-active {
+    background-color: #3b5998;
+    border-color: #3b5998;
+    color: #ffffff;
+}
+
+.seller-size-chip-active:hover {
+    background-color: #2d4373;
+    color: #ffffff;
+}
+
+/* Sur mobile */
+@media (max-width: 600px) {
+    .seller-variation-top {
+        flex-wrap: wrap;
+    }
+
+    .seller-add-row {
+        flex-direction: column;
+        gap: 0;
+    }
+}
+
+/* -- Bouton supprimer variation -- */
+.seller-variation-delete {
+    background: none;
+    border: none;
+    color: #e57373;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.seller-variation-delete:hover {
+    background-color: rgba(229, 115, 115, 0.1);
+}
+
+/* -- Bouton soumettre -- */
+.seller-submit-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #3b5998;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.seller-submit-btn:hover {
+    background-color: #2d4373;
+}
+
+.seller-submit-btn:disabled {
+    background-color: #b0b0b0;
+    cursor: not-allowed;
+}

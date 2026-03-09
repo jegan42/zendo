@@ -12,7 +12,9 @@ import {
   getVariations,
   createVariation,
   deleteVariation,
+  deleteVariationsByProduct,
 } from "../controllers/variation";
+import { authMiddleware } from "../middleware/authMiddleware";
 
 const router = Router();
 
@@ -20,12 +22,17 @@ const router = Router();
 // Exemple : GET /api/products/65abc123/variations
 router.get("/products/:productId/variations", getVariations);
 
-// Creer une variante pour un produit
+// Creer une variante pour un produit (authentifie)
 // Body : { color: "Dore", size: "M", stock: 5 }
-router.post("/products/:productId/variations", createVariation);
+router.post("/products/:productId/variations", authMiddleware, createVariation);
 
-// Supprimer une variante par son ID
+// Supprimer toutes les variantes d'un produit (authentifie)
+// Utile pour l'edition : on supprime tout et on recree
+// Exemple : DELETE /api/variations/product/65abc123
+router.delete("/product/:productId", authMiddleware, deleteVariationsByProduct);
+
+// Supprimer une variante par son ID (authentifie)
 // Exemple : DELETE /api/variations/65xyz789
-router.delete("/variations/:id", deleteVariation);
+router.delete("/variations/:id", authMiddleware, deleteVariation);
 
 export default router;
