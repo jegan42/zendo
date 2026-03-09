@@ -29,6 +29,7 @@ import Cart from "./pages/Cart";
 import SellerHome from "./pages/Seller/SellerHome";
 import Paiement from "./pages/Paiement";
 import OrdersList from "./pages/OrdersList";
+import StoreProductList from "./pages/StoreProductList";
 
 // --- Composants ---
 import Navbar from "./components/Navbar/Navbar";
@@ -92,6 +93,7 @@ function AppContent() {
         <Route path="/produit/:id" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/paiement" element={<Paiement />} />
+        <Route path="/storeProductList" element={<StoreProductList />} />
       </Routes>
 
       {/* On affiche la Navbar seulement si on est PAS sur une page d'auth */}
