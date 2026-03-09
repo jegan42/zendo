@@ -181,13 +181,16 @@ function Search() {
                                         key={product._id}
                                         id={product._id}
                                         title={product.name}
-                                        price={product.price}
+                                        price={product.variations && product.variations.length > 0
+                                            ? Math.min(...product.variations.map((v: any) => v.price ?? 0))
+                                            : 0}
                                         image={
                                             product.images && product.images[0]
                                                 ? product.images[0]
                                                 : ""
                                         }
                                         description={product.description || ""}
+                                        variations={product.variations || []}
                                     />
                                 );
                             })}

@@ -89,4 +89,23 @@ async function deleteVariation(req: Request, res: Response) {
   }
 }
 
-export { getVariations, createVariation, deleteVariation };
+// --- DELETE /api/variations/product/:productId ---
+// Supprime TOUTES les variantes d'un produit
+// Utile quand on edite un produit : on supprime tout et on recree
+async function deleteVariationsByProduct(req: Request, res: Response) {
+  try {
+    const productId = req.params.productId;
+
+    const result = await Variation.deleteMany({ productId: productId });
+
+    res.json({
+      message: "Variations supprimees",
+      deletedCount: result.deletedCount,
+    });
+  } catch (error) {
+    console.error("Erreur deleteVariationsByProduct:", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+}
+
+export { getVariations, createVariation, deleteVariation, deleteVariationsByProduct };

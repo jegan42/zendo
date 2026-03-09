@@ -77,7 +77,7 @@ async function getProducts(req: Request, res: Response) {
       .limit(limit);
     console.log("Nombre de produits trouvés :", products.length);
 
-    // Etape 5 : renvoyer les produits au frontend
+    // Etape 5 : back to front
     return res.status(200).json({
       message: "Produits récupérés avec succès",
       products: products,
@@ -176,6 +176,56 @@ async function createProduct(req: Request, res: Response) {
 }
 
 // ---------------------------------------------------------
+// UPDATE PRODUCT - Modifier un produit existant
+// Route : PUT /api/products/:id
+// Body : les champs a mettre a jour (name, description, etc.)
+// ---------------------------------------------------------
+async function updateProduct(req: Request, res: Response) {
+  try {
+    // Etape 1 : recuperer l'ID depuis l'URL
+    const productId = req.params.id;
+
+    if (!productId) {
+      return res.status(400).json({ message: "ID du produit manquant" });
+    }
+
+    // Etape 2 : verifier que le produit existe
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: "Produit non trouve" });
+    }
+
+    // Etape 3 : mettre a jour les champs envoyes dans le body
+    // On ne touche que les champs qui sont presents dans le body
+    if (req.body.name !== undefined) product.name = req.body.name;
+    if (req.body.description !== undefined)
+      product.description = req.body.description;
+    if (req.body.images !== undefined) product.images = req.body.images;
+    if (req.body.family !== undefined) product.family = req.body.family;
+    if (req.body.category !== undefined) product.category = req.body.category;
+    if (req.body.material !== undefined) product.material = req.body.material;
+    if (req.body.madeInFrance !== undefined)
+      product.madeInFrance = req.body.madeInFrance;
+    if (req.body.reference !== undefined)
+      product.reference = req.body.reference;
+    if (req.body.status !== undefined) product.status = req.body.status;
+
+    // Etape 4 : sauvegarder les modifications
+    await product.save();
+
+    // Etape 5 : renvoyer le produit mis a jour
+    return res.status(200).json({
+      message: "Produit mis a jour avec succes",
+      product: product,
+    });
+  } catch (error) {
+    console.error("Erreur updateProduct:", error);
+    return res.status(500).json({ message: "Erreur serveur" });
+  }
+}
+
+// ---------------------------------------------------------
 // DELETE PRODUCT - Supprimer un produit par son ID
 // Route : DELETE /api/products/:id
 // ---------------------------------------------------------
@@ -207,4 +257,10 @@ async function deleteProduct(req: Request, res: Response) {
   }
 }
 
-export { getProducts, getProductById, createProduct, deleteProduct };
+export {
+  getProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+};
