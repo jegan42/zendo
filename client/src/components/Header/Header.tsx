@@ -49,6 +49,8 @@ export function Header() {
             setHeaderTitle("Profil");
         } else if (pathname === "/favoris") {
             setHeaderTitle("Favoris");
+        } else if (pathname === "/orders") {
+            setHeaderTitle("Commandes");
         } else {
             setHeaderTitle("Zendo");
         }

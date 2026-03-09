@@ -47,10 +47,27 @@ async function addOrder(req: Request, res: Response) {
         if (!user) {
             return res.status(404).json({ message: "Utilisateur non trouvé" });
         }
+
+        // --- PARRIE AJOUTÉE PAR SIMENG : GÉNÉRATION DU NUMÉRO DE COMMANDE ---
+        let isUnique = false;
+        let generatedOrderNumber = "";
+
+        while (!isUnique) {
+            // Génère un nombre entre 5 et 8 chiffres (ex: 12345 à 99999999)
+            generatedOrderNumber = Math.floor(Math.random() * (99999999 - 10000 + 1) + 10000).toString();
+            
+            // On vérifie si ce numéro existe déjà dans la collection Order
+            const existingOrder = await Order.findOne({ orderNumber: generatedOrderNumber });
+            if (!existingOrder) {
+                isUnique = true;
+            }
+        }
+
         // Etape 3 : créer un order principal qui contiendra le userId, le statut du paiement et le montant total
         let totalPrice = req.body.totalPrice;
         const addOrder = await Order.create({
             buyerId: userId,
+            orderNumber: generatedOrderNumber, // Ajout du numéro de commande généré
             status: "pending_payment",
             totalAmount: totalPrice,
         });
@@ -77,7 +94,7 @@ async function addOrder(req: Request, res: Response) {
         user.cart.splice(0, user.cart.length);
         await user.save();
         // Etape 6 : renvoyer un message de succès au frontend
-        res.status(201).json({ message: "Commande créée avec succès" });
+        res.status(201).json({ message: "Commande créée avec succès", orderNumber : generatedOrderNumber });
     } catch (error) {
         console.error("Erreur lors de la création de la commande :", error);
         res.status(500).json({ message: "Erreur serveur" });
