@@ -15,9 +15,15 @@ import img from "../../asset/Logo/product.png";
   /* TODO PLUS TARD :
     useEffect(() => {
       const fetchOrders = async () => {
-        const response = await axios.get("http://localhost:5001/api/orders/user/...");
-        setOrders(response.data);
+        try {
+          const response = await api.get("/orders/user"); // ton endpoint réel à la place de ...
+          setOrders(response.data);
+        } catch (error) {
+          console.error("Erreur lors du chargement des commandes :", error);
+          setOrders([]); // optionnel : reset si erreur
+        }
       };
+
       fetchOrders();
     }, []);
   */

@@ -8,26 +8,27 @@
 
 import { Router } from "express";
 import {
-  addCartItem,
-  deleteCartItem,
-  updateCartItem,
-  getCartItems,
+    addCartItem,
+    deleteCartItem,
+    updateCartItem,
+    getCartItems,
 } from "../controllers/cart";
+import { authMiddleware } from "../middleware/authMiddleware";
 
 // On cree un "routeur" Express
 const router = Router();
 
 // Quand on recoit un POST sur /cart/:id, on appelle la fonction cart du controller
-router.post("/:productId", addCartItem);
+router.post("/:productId", authMiddleware, addCartItem);
 
 // Quand on recoit un DELETE sur /cart/:productId/:cartItemId, on supprime l'item du panier
-router.delete("/:productId/:cartItemId", deleteCartItem);
+router.delete("/:productId/:cartItemId", authMiddleware, deleteCartItem);
 
 // Quand on recoit un PATCH sur /cart/:productId/:cartItemId, on met a jour l'item du panier
-router.patch("/:productId/:cartItemId", updateCartItem);
+router.patch("/:productId/:cartItemId", authMiddleware, updateCartItem);
 
 // Quand on recoit un GET sur /cart, on appelle la fonction cart du controller
-router.get("/", getCartItems);
+router.get("/", authMiddleware, getCartItems);
 
 // On exporte le routeur pour l'utiliser dans index.ts
 export default router;

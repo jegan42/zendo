@@ -8,6 +8,7 @@
 
 import { Router } from "express";
 import { signup, login, recovery, reset } from "../controllers/auth";
+import { updateProfile } from "../controllers/user";
 
 // On cree un "routeur" Express
 const router = Router();
@@ -23,6 +24,9 @@ router.post("/recovery", recovery);
 
 // Quand on recoit un POST sur /login, on appelle la fonction login du controller
 router.post("/reset", reset);
+
+// Route : PUT /api/users/:id
+router.put("/:id", updateProfile);
 
 // On exporte le routeur pour l'utiliser dans index.ts
 export default router;
