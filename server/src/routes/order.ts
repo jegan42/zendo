@@ -1,11 +1,12 @@
 import { Router } from "express";
 import { addOrder, deleteOrder, getOrder } from "../controllers/order";
+import { authMiddleware } from "../middleware/authMiddleware";
 
 // On cree un "routeur" Express
 const router = Router();
 
 // Quand on recoit un POST sur /orders/:id, on appelle la fonction order du controller
-router.post("/", addOrder);
+router.post("/", authMiddleware, addOrder);
 
 // Quand on recoit un DELETE sur /orders/:id, on appelle la fonction order du controller
 router.delete("/:orderId", deleteOrder);

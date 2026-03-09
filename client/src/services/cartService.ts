@@ -3,53 +3,45 @@
 // Contient la fonction addToCart qui envoie une requete POST à l'API pour ajouter un produit au panier de l'utilisateur
 // =============================================================
 
-const addToCart = (
-  // je récupere l'id du produit et les choix de l'utilisateur (couleur, taille, quantité) pour les envoyer à l'API
-  productId: string,
-  color: string,
-  size: string,
-  quantity: number,
+import api from "./api";
+
+const addToCart = async (
+    // je récupere l'id du produit et les choix de l'utilisateur (couleur, taille, quantité) pour les envoyer à l'API
+    productId: string,
+    color: string,
+    size: string,
+    quantity: number
 ) => {
-  // j'envoie une requete POST à l'API pour ajouter le produit au panier de l'utilisateur
-  return fetch(`http://localhost:5001/api/cart/${productId}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + localStorage.getItem("token"),
-    },
-    body: JSON.stringify({
-      color: color,
-      size: size,
-      quantity: quantity,
-    }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      return data.message;
-    });
+    // j'envoie une requete POST à l'API pour ajouter le produit au panier de l'utilisateur
+    return api
+        .post(`/cart/${productId}`, {
+            color,
+            size,
+            quantity,
+        })
+        .then((response) => response.data.message)
+        .catch((err) => {
+            console.error("Erreur ajout au panier:", err);
+            throw err; // relance l'erreur pour la gestion ailleurs si besoin
+        });
 };
 
-const updateCartItem = (
-  // je récupere l'id du produit, du cart item et les choix de l'utilisateur (couleur, taille, quantité) pour les envoyer à l'API
-  productId: string,
-  cartItemId: string,
-  selectedQuantity: number,
+const updateCartItem = async (
+    // je récupere l'id du produit, du cart item et les choix de l'utilisateur (couleur, taille, quantité) pour les envoyer à l'API
+    productId: string,
+    cartItemId: string,
+    selectedQuantity: number
 ) => {
-  // j'envoie une requete PATCH à l'API pour mettre à jour le produit dans le panier de l'utilisateur
-  return fetch(`http://localhost:5001/api/cart/${productId}/${cartItemId}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + localStorage.getItem("token"),
-    },
-    body: JSON.stringify({
-      quantity: selectedQuantity,
-    }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      return data.message;
-    });
+    // j'envoie une requete PATCH à l'API pour mettre à jour le produit dans le panier de l'utilisateur
+    return api
+        .patch(`/cart/${productId}/${cartItemId}`, {
+            quantity: selectedQuantity,
+        })
+        .then((response) => response.data.message)
+        .catch((err) => {
+            console.error("Erreur mise à jour panier:", err);
+            throw err; // relance l'erreur pour gestion ailleurs
+        });
 };
 
 export { addToCart, updateCartItem };

@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { updateCartItem } from "../services/cartService";
 import { addOrder } from "../services/orderService";
+import api from "../services/api";
 
 function Cart() {
   // ETATS & HOOKS
@@ -25,33 +26,32 @@ function Cart() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // fetch les produits du panier de l'utilisateur
-    fetch(`http://localhost:5001/api/cart`, {
-      method: "GET",
-      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const cart = data.cart || [];
-        setCart(cart);
+    async function loadCart() {
+      try {
+        // récupérer le panier
+        const cartResponse = await api.get<{ cart: any[] }>("/cart");
 
-        // charger les données de chaque produit
-        for (let i = 0; i < cart.length; i++) {
-          fetch(`http://localhost:5001/api/products/${cart[i].product}`, {
-            method: "GET",
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("token"),
-            },
-          })
-            .then((response) => response.json())
-            .then((productData) => {
-              cart[i].productData = productData.product;
-              // mettre à jour le panier avec les données du produit
-              setCart([...cart]);
-            });
-        }
-        console.log(cart);
-      });
+        const cart = cartResponse.data?.cart ?? [];
+
+        // récupérer les produits du panier
+        const products = await Promise.all(
+          cart.map(async (item: any) => {
+            const productRes = await api.get(`/products/${item.product}`);
+
+            return {
+              ...item,
+              productData: productRes.data.product,
+            };
+          }),
+        );
+
+        setCart(products);
+      } catch (error) {
+        console.error("Erreur chargement panier:", error);
+      }
+    }
+
+    loadCart();
   }, []);
 
   // fonction pour afficher la liste des produits du panier de l'utilisateur
@@ -111,20 +111,16 @@ function Cart() {
   };
   const handleDeleteClick = (item: any) => {
     // supprimer le produit du panier de l'utilisateur
-    setCart((prevCart) =>
-      // filtrer le panier pour supprimer le produit correspondant
-      prevCart.filter((cartItem) => cartItem._id !== item._id),
-    );
+    const removeFromCart = async (item: any) => {
+      try {
+        await api.delete(`/cart/${item.product}/${item._id}`);
 
-    fetch(`http://localhost:5001/api/cart/${item.product}/${item._id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-    })
-      // mettre a jour le panier apres suppression du produit
-      .then((response) => response.json())
-      .catch(() => {});
+        setCart((prev) => prev.filter((p) => p._id !== item._id));
+      } catch (error) {
+        console.error("Erreur suppression produit:", error);
+      }
+    };
+    removeFromCart(item);
   };
 
   const totalPrice = cart.reduce(
