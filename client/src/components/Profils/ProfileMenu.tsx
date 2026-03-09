@@ -5,12 +5,10 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 import "./ProfileMenu.css";
 import UserInfosModal from "../Modal/UserInfoMoal/UserInfoModal";
 import ShopInfoModal from "../Modal/ShopInfoModal/ShopInfoModal";
-import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import api from "../../services/api";
 
 const ProfileMenu = () => {
-    const dispatch = useDispatch();
     const { userInfo: user, token } = useSelector((state: any) => state.user);
 
     const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);

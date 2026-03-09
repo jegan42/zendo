@@ -2,11 +2,19 @@
 /* Fond de la page */
 .profile-page-container {
   background-color: #F5F1E9;
-  min-height: 100vh;
-  padding: 20px;
+  min-height: 800px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  box-sizing: border-box;
+}
+
+.profile-menu-container {
+  width: 100%;
+  max-width: 800px; /* Augmenté pour être plus large sur grand écran */
+  margin: 0 auto;   /* Centre le menu si l'écran est très large */
+  padding: 10px;    /* Petit espace sur les bords pour mobile */
   box-sizing: border-box;
 }
 
@@ -22,7 +30,7 @@
 /* La carte blanche (Base pour Menu, Achats et Paramètres) */
 .white-card {
   background-color: #ffffff;
-  border-radius: 12px;
+  border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
   overflow: hidden; /* Pour que le hover respecte les arrondis */
 }
