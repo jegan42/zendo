@@ -107,7 +107,7 @@ const UserInfosModal = ({ isOpen, onClose }: UserInfosModalProps) => {
             }
 
             // 3️⃣ Préparation des requêtes API
-            const userPromise = api.put(`/auth/${userId}`, { email });
+            const userPromise = api.put(`/auth`, { email });
 
             let addressPromise: Promise<any> = Promise.resolve(null);
             if (address.street && address.city && address.phone) {
