@@ -21,38 +21,24 @@ export function Header() {
 
     // Récupérer le titre selon la route
     useEffect(() => {
-        // met à jour le titre de l’en-tête en fonction de la route actuelle et du produit affiché
         if (pathname.includes("/produit") && productId) {
-            const fetchProduct = async () => {
-                try {
-                    const response = await api.get<{
-                        product: { name?: string };
-                    }>(`/products/${productId}`);
-
-                    if (response.data?.product?.name) {
-                        setHeaderTitle(response.data.product.name);
-                    }
-                } catch (error) {
-                    console.error("Erreur fetch produit:", error);
-                    setHeaderTitle("Produit");
-                }
-            };
-
-            fetchProduct();
-        } else if (pathname === "/cart") {
-            setHeaderTitle("Panier");
-        } else if (pathname === "/notifications") {
-            setHeaderTitle("Notifications");
-        } else if (pathname === "/menu") {
-            setHeaderTitle("Menu");
-        } else if (pathname === "/profil") {
-            setHeaderTitle("Profil");
-        } else if (pathname === "/favoris") {
-            setHeaderTitle("Favoris");
-        } else {
-            setHeaderTitle("Zendo");
+            api.get<{ product: { name?: string } }>(`/products/${productId}`)
+                .then((res) =>
+                    setHeaderTitle(res.data.product?.name ?? "Produit")
+                )
+                .catch(() => setHeaderTitle("Produit"));
+            return;
         }
-        // exécute ce code chaque fois que pathname ou productId change
+
+        const titles: Record<string, string> = {
+            "/cart": "Panier",
+            "/notifications": "Notifications",
+            "/menu": "Menu",
+            "/profil": "Profil",
+            "/favoris": "Favoris",
+        };
+
+        setHeaderTitle(titles[pathname] ?? "Zendo");
     }, [pathname, productId]);
 
     // affiche le menu de gauche en fonction de la route actuelle
