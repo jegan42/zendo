@@ -38,7 +38,7 @@ function Navbar() {
         <span className="navbar-label">Profil</span>
       </NavLink>
 
-      <NavLink to="/boutique" className="navbar-item">
+      <NavLink to="/vendeur" className="navbar-item">
         <Storefront className="navbar-icon" />
         <span className="navbar-label">Boutique</span>
       </NavLink>

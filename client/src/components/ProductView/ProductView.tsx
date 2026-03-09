@@ -52,8 +52,10 @@ function ProductView(props: ProductViewProps) {
 
   return (
     <div className="product-card">
-      {/* Image du produit */}
-      <img src={props.image} alt={props.title} className="product-image" />
+      {/* Image du produit (on n'affiche pas le tag si pas d'image) */}
+      {props.image && (
+        <img src={props.image} alt={props.title} className="product-image" />
+      )}
 
       <div className="product-info">
         {/* Premiere ligne : Titre et icones */}
@@ -87,7 +89,7 @@ function ProductView(props: ProductViewProps) {
         </div>
 
         {/* Prix */}
-        <p className="product-price">{props.price.toFixed(2)} EUR</p>
+        <p className="product-price">{(props.price || 0).toFixed(2)} EUR</p>
 
         {/* Description tronquee */}
         <p className="product-description">
