@@ -16,7 +16,7 @@ import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { updateCartItem } from "../services/cartService";
-import { addOrder } from "../services/oderService";
+import { addOrder } from "../services/orderService";
 import api from "../services/api";
 
 function Cart() {

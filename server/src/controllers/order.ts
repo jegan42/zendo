@@ -17,7 +17,9 @@ import OrderLine from "../models/OrderLine";
 
 // à créer une fois que les commandes seront implémentées dans la base de données
 
-async function getOrder(req: Request, res: Response) {}
+async function getOrder(req: Request, res: Response) {
+  res.status(200).json({ message: "Popo" });
+}
 
 // ---------------------------------------------------------
 // RÉCUPÉRER TOUTES LES COMMANDES D'UN UTILISATEUR
