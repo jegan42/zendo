@@ -28,8 +28,8 @@ import ProductList from "./pages/ProductList";
 import Cart from "./pages/Cart";
 import SellerHome from "./pages/Seller/SellerHome";
 import Paiement from "./pages/Paiement";
-import StoreProductList from "./pages/StoreProductList";
 import OrdersList from "./pages/OrdersList";
+import StoreProductList from "./pages/StoreProductList";
 
 // --- Composants ---
 import Navbar from "./components/Navbar/Navbar";
