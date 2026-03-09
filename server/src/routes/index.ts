@@ -32,7 +32,7 @@ router.use("/cart", cartRoutes);
 // Routes seller : GET /api/seller/:id (dashboard vendeur)
 router.use("/seller", sellerRoutes);
 
-// Routes address : POST /api/address/save/:userId (sauvegarder adresse)
+// Routes address : POST /api/address/save (sauvegarder adresse)
 router.use("/address", addressRoutes);
 
 // Routes orders : POST /api/orders/create (creer une commande)
