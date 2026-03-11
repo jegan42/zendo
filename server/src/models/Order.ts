@@ -8,6 +8,12 @@ const OrderSchema = new mongoose.Schema(
             required: true,
         },
 
+        orderNumber: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+
         status: {
             type: String,
             enum: [

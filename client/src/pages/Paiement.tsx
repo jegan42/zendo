@@ -35,7 +35,7 @@ function Paiement() {
             try {
                 const [orderRes, addressRes] = await Promise.all([
                     api.get<{ order: OrderItem[] }>("/orders"),
-                    api.get<{ address: Address }>(`/address/${userId}`),
+                    api.get<{ address: Address }>(`/address`),
                 ]);
 
                 setOrder(orderRes.data.order || []);
