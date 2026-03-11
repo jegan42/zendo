@@ -15,7 +15,7 @@ import Button from "../components/Button/Button";
 import { Link, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { updateCartItem } from "../services/cartService";
+import { updateCartItem, notifyCartUpdated } from "../services/cartService";
 import { addOrder } from "../services/orderService";
 import api from "../services/api";
 
@@ -24,6 +24,10 @@ function Cart() {
   const [cart, setCart] = useState<any[]>([]);
 
   const [error, setError] = useState("");
+
+  // notifyCartUpdated est importé depuis cartService.ts.
+  // Il émet l'événement "cart:updated" que le Header écoute pour rafraîchir le badge.
+  // Toute page qui modifie le panier peut l'importer et l'appeler de la même façon.
 
   useEffect(() => {
     async function loadCart() {
@@ -46,6 +50,9 @@ function Cart() {
         );
 
         setCart(products);
+        // On notifie le Header que le panier vient d'être chargé,
+        // pour que le badge affiche le bon nombre dès l'ouverture de la page.
+        notifyCartUpdated();
       } catch (error) {
         console.error("Erreur chargement panier:", error);
       }
@@ -98,7 +105,12 @@ function Cart() {
     if (item.quantity < 10) {
       item.quantity += 1;
       setCart([...cart]);
-      updateCartItem(item.product, item._id, item.quantity);
+      updateCartItem(item.product, item._id, item.quantity)
+        .then(() => {
+          // Quantité modifiée côté API → on met à jour le badge du Header
+          notifyCartUpdated();
+        })
+        .catch((err) => console.error("Erreur mise à jour panier:", err));
     }
   };
   // fonctions pour diminuer la quantité d'un produit dans le panier de l'utilisateur
@@ -106,7 +118,12 @@ function Cart() {
     if (item.quantity > 1) {
       item.quantity -= 1;
       setCart([...cart]);
-      updateCartItem(item.product, item._id, item.quantity);
+      updateCartItem(item.product, item._id, item.quantity)
+        .then(() => {
+          // Quantité modifiée côté API → on met à jour le badge du Header
+          notifyCartUpdated();
+        })
+        .catch((err) => console.error("Erreur mise à jour panier:", err));
     }
   };
   const handleDeleteClick = (item: any) => {
@@ -115,7 +132,10 @@ function Cart() {
       try {
         await api.delete(`/cart/${item.product}/${item._id}`);
 
-        setCart((prev) => prev.filter((p) => p._id !== item._id));
+        const updatedCart = cart.filter((p) => p._id !== item._id);
+        setCart(updatedCart);
+        // Article supprimé → on prévient le Header de recalculer le badge
+        notifyCartUpdated();
       } catch (error) {
         console.error("Erreur suppression produit:", error);
       }
@@ -133,6 +153,8 @@ function Cart() {
     addOrder(totalPrice).then((message) => {
       if (message === "Commande créée avec succès") {
         setCart([]);
+        // Panier vidé après paiement → badge remis à 0 dans le Header
+        notifyCartUpdated();
         window.location.href = "/paiement";
       }
     });
