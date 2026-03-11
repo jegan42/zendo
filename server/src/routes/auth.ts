@@ -9,6 +9,7 @@
 import { Router } from "express";
 import { signup, login, recovery, reset } from "../controllers/auth";
 import { updateProfile } from "../controllers/user";
+import { authMiddleware } from "../middleware/authMiddleware";
 
 // On cree un "routeur" Express
 const router = Router();
@@ -26,7 +27,7 @@ router.post("/recovery", recovery);
 router.post("/reset", reset);
 
 // Route : PUT /api/users/:id
-router.put("/:id", updateProfile);
+router.put("/:id", authMiddleware, updateProfile);
 
 // On exporte le routeur pour l'utiliser dans index.ts
 export default router;

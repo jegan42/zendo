@@ -5,6 +5,7 @@
 // =============================================================
 
 import { Request, Response } from "express";
+import mongoose from "mongoose";
 import Product from "../models/Product";
 import Seller from "../models/Seller";
 import User from "../models/User";
@@ -21,8 +22,8 @@ async function getSellerHome(req: Request, res: Response) {
     // Etape 1 : recuperer l'ID du vendeur depuis l'URL
     const sellerId = req.params.id;
 
-    if (!sellerId) {
-      return res.status(400).json({ message: "ID du vendeur manquant" });
+    if (!sellerId || !mongoose.Types.ObjectId.isValid(sellerId as string)) {
+      return res.status(400).json({ message: "ID du vendeur manquant ou invalide" });
     }
 
     // Etape 2 : recuperer tous les produits (actifs ET inactifs)
@@ -138,10 +139,18 @@ async function createSeller(req: Request, res: Response) {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
 
+    // On renvoie le user au meme format que le login (avec "id" et sans le password)
+    // Sinon le front recoit "_id" au lieu de "id" et ca casse les appels API
     return res.status(201).json({
       message: "Félicitations ! Votre boutique est maintenant ouverte.",
       seller: newSeller,
-      user: updatedUser
+      user: {
+        id: updatedUser._id,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        email: updatedUser.email,
+        role: updatedUser.role,
+      }
     });
 
   } catch (error: any) {

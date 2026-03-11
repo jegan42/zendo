@@ -42,6 +42,10 @@ const userSlice = createSlice({
       state.userInfo = action.payload.user;
       state.token = action.payload.token;
       state.isAuthenticated = true;
+      // On synchronise aussi localStorage pour que les donnees persistent au refresh
+      // (meme logique que logout qui nettoie localStorage)
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
     },
 
     /**

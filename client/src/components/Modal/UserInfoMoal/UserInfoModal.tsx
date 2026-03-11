@@ -53,7 +53,7 @@ const UserInfosModal = ({ isOpen, onClose }: UserInfosModalProps) => {
 
                 if (!userId) return;
 
-                const response = await api.get(`/address/${userId}`);
+                const response = await api.get(`/address`);
                 const allAddresses = response.data; // tableau d'adresses
 
                 if (Array.isArray(allAddresses)) {
@@ -107,11 +107,11 @@ const UserInfosModal = ({ isOpen, onClose }: UserInfosModalProps) => {
             }
 
             // 3️⃣ Préparation des requêtes API
-            const userPromise = api.put(`/auth/${userId}`, { email });
+            const userPromise = api.put(`/auth`, { email });
 
             let addressPromise: Promise<any> = Promise.resolve(null);
             if (address.street && address.city && address.phone) {
-                addressPromise = api.post(`/address/save/${userId}`, {
+                addressPromise = api.post(`/address/save`, {
                     phone: `${address.countryCode}${address.phone}`,
                     street: address.street,
                     postalCode: address.postalCode,
