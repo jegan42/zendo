@@ -52,6 +52,7 @@ interface VariationForm {
   color: string;
   price: string;
   stock: string;
+  images: string;
 }
 
 const SellerAddProduct = () => {
@@ -76,7 +77,7 @@ const SellerAddProduct = () => {
   // Chaque ligne = 1 taille + 1 couleur + 1 prix + 1 stock
   // etat initial = tableau avec un objet vide
   const [variations, setVariations] = useState<VariationForm[]>([
-    { size: "", color: "", price: "", stock: "" },
+    { size: "", color: "", price: "", stock: "", images: "" },
   ]);
 
   // -- ETATS UI --
@@ -92,7 +93,7 @@ const SellerAddProduct = () => {
   const handleAddVariation = () => {
     setVariations([
       ...variations,
-      { size: "", color: "", price: "", stock: "" },
+      { size: "", color: "", price: "", stock: "", images: "" },
     ]);
   };
 
@@ -219,6 +220,9 @@ const SellerAddProduct = () => {
           size: v.size,
           price: Number(v.price),
           stock: Number(v.stock) || 0,
+          images: v.images.trim()
+            ? v.images.split("\n").map((url) => url.trim()).filter((url) => url !== "")
+            : [],
         });
       }
 
@@ -479,6 +483,17 @@ const SellerAddProduct = () => {
                   }
                 />
               </div>
+
+              {/* Images de la variation (une URL par ligne) */}
+              <textarea
+                className="seller-add-textarea"
+                placeholder={"Images variation (une URL par ligne)"}
+                rows={2}
+                value={variation.images}
+                onChange={(e) =>
+                  handleVariationChange(index, "images", e.target.value)
+                }
+              />
             </div>
           ))}
         </div>

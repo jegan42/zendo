@@ -10,6 +10,7 @@ import { Router } from "express";
 import { signup, login, recovery, reset } from "../controllers/auth";
 import { updateProfile } from "../controllers/user";
 import { authMiddleware } from "../middleware/authMiddleware";
+import { googleAuth } from "../controllers/authGoogle";
 
 // On cree un "routeur" Express
 const router = Router();
@@ -28,6 +29,8 @@ router.post("/reset", reset);
 
 // Route : PUT /api/users/:id
 router.put("/:id", authMiddleware, updateProfile);
+
+router.post("/google", googleAuth);
 
 // On exporte le routeur pour l'utiliser dans index.ts
 export default router;

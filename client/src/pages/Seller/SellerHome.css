@@ -125,3 +125,49 @@
 .seller-retry-btn:hover {
     background-color: #2d4373;
 }
+/* =============================================================
+   RESPONSIVE - Tablette / petit ecran
+   ============================================================= */
+@media (max-width: 600px) {
+    .seller-stats-row {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .stat-card {
+        min-width: calc(50% - 4px);
+    }
+
+    .seller-products-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    .seller-add-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* =============================================================
+   RESPONSIVE - Telephone
+   ============================================================= */
+@media (max-width: 400px) {
+    .stat-card {
+        min-width: 100%;
+    }
+
+    .seller-section-title {
+        font-size: 16px;
+    }
+
+    .seller-add-btn span {
+        display: none;
+    }
+
+    .seller-add-btn {
+        width: auto;
+        padding: 8px 10px;
+    }
+}
