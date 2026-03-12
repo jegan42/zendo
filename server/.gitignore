@@ -12,3 +12,7 @@ dist/
 
 # Logs
 *.log
+
+# Pipeline images generees
+generated-images/
+pipeline-state.json

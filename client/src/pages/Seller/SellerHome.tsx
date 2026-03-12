@@ -23,6 +23,15 @@ import "../../styles/Pages.css";
 import "./SellerHome.css";
 
 const SellerHome = () => {
+  // -- DETECTION MOBILE (pour cacher des colonnes du tableau) --
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 600);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 600);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // -- ETATS --
   const [products, setProducts] = useState<any[]>([]);
   const [stats, setStats] = useState({
@@ -139,7 +148,7 @@ const SellerHome = () => {
       field: "name",
       headerName: "Nom",
       flex: 1,
-      minWidth: 150,
+      minWidth: isMobile ? 100 : 150,
     },
 
     // Colonne reference
@@ -313,6 +322,11 @@ const SellerHome = () => {
               pagination: { paginationModel: { pageSize: 10 } },
             }}
             pageSizeOptions={[5, 10, 25]}
+            columnVisibilityModel={{
+              reference: !isMobile,
+              category: !isMobile,
+              prix: !isMobile,
+            }}
             disableRowSelectionOnClick
             autoHeight
             sx={{

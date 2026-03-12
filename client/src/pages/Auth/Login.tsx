@@ -2,8 +2,7 @@
 // PAGE LOGIN (version refactorisee) - Utilise les composants Button, Input, Message
 // =============================================================
 
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useRef, useState } from "react";
 import "../../styles/Auth.css";
 import Button from "../../components/Button/Button";
 import GoogleIcon from "@mui/icons-material/Google";
@@ -13,8 +12,10 @@ import { Message } from "../../components/Message/Message";
 import AuthFooter from "./AuthFooter";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../reducers/user";
-import { useNavigate } from "react-router-dom"; // Pour rediriger vers le profil
+import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
+import GoogleLogo from "../../components/GoogleLogo/GoogleIcon";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -22,6 +23,15 @@ const Login = () => {
     const [error, setError] = useState("");
     const dispatch = useDispatch(); // Initialisation du dispatch
     const navigate = useNavigate(); // Initialisation du hook useNavigate
+    const googleButtonRef = useRef<HTMLDivElement>(null);
+
+    const triggerGoogleLogin = () => {
+        (
+            googleButtonRef.current?.querySelector(
+                'div[role="button"]'
+            ) as HTMLButtonElement
+        )?.click();
+    };
 
     const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -52,9 +62,32 @@ const Login = () => {
         }
     };
 
-    const handleGoogle = () => {
-        // TODO: connection Google a implementer
+    const handleGoogleSuccess = async (
+        credentialResponse: CredentialResponse
+    ) => {
+        try {
+            if (!credentialResponse.credential) {
+                setError("Impossible de récupérer le token Google");
+                return;
+            }
+
+            // Envoi au backend
+            const response = await api.post("/auth/google", {
+                tokenId: credentialResponse.credential, // ⚡ ID token JWT
+            });
+
+            const { token, user } = response.data;
+
+            localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(user));
+            dispatch(setCredentials({ user, token }));
+            navigate("/home");
+        } catch (err: any) {
+            setError(err.response?.data?.message || "Erreur connexion Google");
+        }
     };
+
+    const handleGoogleError = () => setError("Connexion Google échouée");
 
     return (
         <div className="auth-container">
@@ -89,11 +122,18 @@ const Login = () => {
                         variant="secondary"
                         size="sm"
                         className="auth-button"
-                        leftIcon={<GoogleIcon />}
-                        onClick={handleGoogle}
+                        leftIcon={<GoogleLogo />}
+                        onClick={triggerGoogleLogin}
                     >
-                        Google
+                        Continuer avec Google
                     </Button>
+                    <div style={{ display: "none" }} ref={googleButtonRef}>
+                        <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onError={handleGoogleError}
+                            useOneTap // optionnel, pour le popup automatique
+                        />
+                    </div>
                 </form>
                 {/* --- LIENS EN BAS --- */}
                 <AuthFooter />

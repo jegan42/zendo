@@ -72,17 +72,23 @@ function Home() {
       {/* 1. FAMILLES (Femme, Homme, Enfant, Maison) */}
       <FamilyCards families={FAMILLES} onFamilyClick={handleFamilyClick} />
 
-      {/* 2. NOUVEAUTES */}
+      {/* 2. SELECTIONS PAR FAMILLE (tri aleatoire pour varier a chaque visite) */}
       <ProductRow
-        title="Nouveautes"
-        endpoint="?sort=recent&limit=8"
+        title="Selection Femme"
+        endpoint="?family=Femme&sort=random&limit=8"
+        onProductClick={handleProductClick}
+      />
+
+      <ProductRow
+        title="Selection Homme"
+        endpoint="?family=Homme&sort=random&limit=8"
         onProductClick={handleProductClick}
       />
 
       {/* 3. MADE IN FRANCE */}
       <ProductRow
         title="Made in France"
-        endpoint="?madeInFrance=true&limit=8"
+        endpoint="?madeInFrance=true&sort=random&limit=8"
         onProductClick={handleProductClick}
       />
 
@@ -92,10 +98,10 @@ function Home() {
         onCategoryClick={handleCategoryClick}
       />
 
-      {/* 5. COUPS DE COEUR  */}
+      {/* 5. SELECTION MAISON */}
       <ProductRow
-        title="Coups de coeur"
-        endpoint="?sort=popular&limit=8"
+        title="Selection Maison"
+        endpoint="?family=Maison&sort=random&limit=8"
         onProductClick={handleProductClick}
       />
     </div>
