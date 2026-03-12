@@ -35,6 +35,7 @@ const CATEGORIES = [
   "Tapis",
   "Decoration",
   "Art_de_la_table",
+  "Jouet",
 ];
 
 const ProductSchema = new mongoose.Schema(

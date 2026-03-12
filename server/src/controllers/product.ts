@@ -68,14 +68,35 @@ async function getProducts(req: Request, res: Response) {
       sortOption = { price: -1 };
     }
 
+    // Tri aleatoire : utilise $sample de MongoDB pour melanger les produits
+    // Utile pour la homepage (varier les produits affiches a chaque visite)
+    if (req.query.sort === "random") {
+      const products = await Product.aggregate([
+        { $match: filter },
+        { $sample: { size: limit } },
+        {
+          $lookup: {
+            from: "variations",
+            localField: "_id",
+            foreignField: "productId",
+            as: "variations",
+          },
+        },
+      ]);
+
+      return res.status(200).json({
+        message: "Produits récupérés avec succès",
+        products: products,
+        count: products.length,
+      });
+    }
+
     // Etape 4 : chercher les produits ET inclure les variations
     // .populate('variations') utilise le champ virtuel défini dans modèle
-    console.log("Filtre envoyé à MongoDB :", filter);
     const products = await Product.find(filter)
       .populate("variations")
       .sort(sortOption)
       .limit(limit);
-    console.log("Nombre de produits trouvés :", products.length);
 
     // Etape 5 : back to front
     return res.status(200).json({

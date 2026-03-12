@@ -6,6 +6,7 @@
 // =============================================================
 
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FavoriteBorder, Favorite, AddShoppingCart } from "@mui/icons-material";
 import ProductModal from "../Modal/ProductModal/ProductModal";
 import "./ProductView.css";
@@ -21,6 +22,7 @@ interface ProductViewProps {
 }
 
 function ProductView(props: ProductViewProps) {
+  const navigate = useNavigate();
   const [isFavorite, setIsFavorite] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -52,15 +54,27 @@ function ProductView(props: ProductViewProps) {
 
   return (
     <div className="product-card">
-      {/* Image du produit (on n'affiche pas le tag si pas d'image) */}
+      {/* Image du produit — clic ouvre la fiche produit */}
       {props.image && (
-        <img src={props.image} alt={props.title} className="product-image" />
+        <img
+          src={props.image}
+          alt={props.title}
+          className="product-image"
+          onClick={() => navigate("/produit/" + props.id)}
+          style={{ cursor: "pointer" }}
+        />
       )}
 
       <div className="product-info">
         {/* Premiere ligne : Titre et icones */}
         <div className="product-header">
-          <h3 className="product-title">{props.title}</h3>
+          <h3
+            className="product-title"
+            onClick={() => navigate("/produit/" + props.id)}
+            style={{ cursor: "pointer" }}
+          >
+            {props.title}
+          </h3>
           <div className="product-actions">
             {/* Toggle Favoris */}
             <button

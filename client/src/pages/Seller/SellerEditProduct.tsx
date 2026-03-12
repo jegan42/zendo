@@ -34,6 +34,7 @@ interface VariationForm {
   color: string;
   price: string;
   stock: string;
+  images: string;
 }
 
 const SellerEditProduct = () => {
@@ -57,7 +58,7 @@ const SellerEditProduct = () => {
 
   // -- ETATS DES VARIATIONS --
   const [variations, setVariations] = useState<VariationForm[]>([
-    { size: "", color: "", price: "", stock: "" },
+    { size: "", color: "", price: "", stock: "", images: "" },
   ]);
 
   // -- ETATS UI --
@@ -100,6 +101,7 @@ const SellerEditProduct = () => {
           color: v.color || "",
           price: v.price ? String(v.price) : "",
           stock: v.stock ? String(v.stock) : "0",
+          images: v.images && v.images.length > 0 ? v.images.join("\n") : "",
         }));
         setVariations(formVariations);
       }
@@ -117,7 +119,7 @@ const SellerEditProduct = () => {
 
   // Ajouter une ligne de variation vide
   const handleAddVariation = () => {
-    setVariations([...variations, { size: "", color: "", price: "", stock: "" }]);
+    setVariations([...variations, { size: "", color: "", price: "", stock: "", images: "" }]);
   };
 
   // Supprimer une variation par son index
@@ -226,6 +228,9 @@ const SellerEditProduct = () => {
           size: v.size,
           price: Number(v.price),
           stock: Number(v.stock) || 0,
+          images: v.images.trim()
+            ? v.images.split("\n").map((url: string) => url.trim()).filter((url: string) => url !== "")
+            : [],
         });
       }
 
@@ -473,6 +478,15 @@ const SellerEditProduct = () => {
                   onChange={(e) => handleVariationChange(index, "stock", e.target.value)}
                 />
               </div>
+
+              {/* Images de la variation (une URL par ligne) */}
+              <textarea
+                className="seller-add-textarea"
+                placeholder={"Images variation (une URL par ligne)"}
+                rows={2}
+                value={variation.images}
+                onChange={(e) => handleVariationChange(index, "images", e.target.value)}
+              />
             </div>
           ))}
         </div>

@@ -15,6 +15,10 @@ const VariationSchema = new mongoose.Schema(
     stock: { type: Number, default: 0 },
 
     price: { type: Number, required: true },
+
+    // URLs des images pour cette variation (optionnel)
+    // Permet d'afficher plusieurs images par couleur dans la galerie produit
+    images: [{ type: String }],
   },
   { timestamps: true },
 );
