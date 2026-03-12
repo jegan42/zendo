@@ -41,7 +41,7 @@ const UserSchema = new mongoose.Schema(
     role: {
       type: [String],
       enum: ["buyer", "seller", "admin"],
-      default: "buyer", // si on ne precise pas, c'est "buyer"
+      default: ["buyer"], // si on ne precise pas, c'est "buyer"
     },
 
     // !!!JC!!! possible de recuperer l'avatar de google mais l'utilisateur peut uploader un lui meme
