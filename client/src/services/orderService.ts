@@ -15,4 +15,17 @@ const addOrder = async (totalPrice: number): Promise<string> => {
     }
 };
 
-export { addOrder };
+const getUserOrders = async (): Promise<any[]> => {
+    try {
+        const response = await api.get("/orders/my-orders");
+        
+        // Retourne le tableau formaté par le backend : 
+        // [{ orderNumber, totalAmount, status, shopNames, createdAt }, ...]
+        return response.data;
+    } catch (err: any) {
+        console.error("Erreur lors de la récupération de la liste des commandes :", err);
+        throw err;
+    }
+};
+
+export { addOrder, getUserOrders };

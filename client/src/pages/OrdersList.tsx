@@ -1,19 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/OrdersList.css";
 import OrderPreview from "../components/OrdersList/OrderPreview";
 import { Header } from "../components/Header/Header";
 import Navbar from "../components/Navbar/Navbar";
-import { Link } from "react-router-dom";
-import { faCartShopping } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { addToCart } from "../services/cartService";
-import { Message } from "../components/Message/Message";
+import { getUserOrders} from "../services/orderService";
+
 
 function OrdersList() {
-  const [selectedPeriod, setSelectedPeriod] = useState("6 derniers mois");
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  // TODO: Intégrer l'appel API ici plus tard avec selectedPeriod
-  
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const data = await getUserOrders();
+        setOrders(data);
+      } catch (err) {
+        console.error("Erreur lors du chargement des commandes", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
   return (
     <div className="page-container">
       <Header />
@@ -21,21 +32,31 @@ function OrdersList() {
       <main className="page-content orders-page">
         <div className="orders-wrapper">
           <div className="orders-grid">
-            <OrderPreview
-              orderId="17289300028272"
-              date="12/11/2025"
-              total="130 €"
-              status="Réglé"
-              packages={["Colis 1 sur 2", "Colis 2 sur 2"]}
-            />
+            {loading ? (
+              <p style={{ textAlign: "center", marginTop: "20px" }}>Chargement de vos commandes...</p>
+            ) : orders.length > 0 ? (
+              orders.map((order) => {
+                // Logique Colis X sur Y
+                const totalPackages = order.shopNames.length;
+                const packageLabels = order.shopNames.map((shopName: string, index: number) => 
+                  `Colis ${index + 1} sur ${totalPackages} : ${shopName}`
+                );
 
-            <OrderPreview
-              orderId="1283037272929373"
-              date="05/11/2025"
-              total="45 €"
-              status="Réglé"
-              packages={["Colis 1 sur 1"]}
-            />
+                return (
+                  <OrderPreview
+                    key={order._id}
+                    orderId={order.orderNumber}
+                    // Formatage de la date ISO en FR
+                    date={new Date(order.createdAt).toLocaleDateString("fr-FR")}
+                    total={`${order.totalAmount} €`}
+                    status={order.status === "paid" ? "Réglé" : order.status}
+                    packages={packageLabels}
+                  />
+                );
+              })
+            ) : (
+              <p style={{ textAlign: "center", marginTop: "20px" }}>Vous n'avez pas encore de commandes.</p>
+            )}
           </div>
         </div>
       </main>
@@ -43,5 +64,4 @@ function OrdersList() {
     </div>
   );
 }
-
 export default OrdersList;
