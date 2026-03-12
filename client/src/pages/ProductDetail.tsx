@@ -1,3 +1,9 @@
+// =============================================================
+// PAGE PRODUCT DETAIL - Galerie style Zalando
+// Layout : vignettes gauche | image principale | infos droite
+// Les pastilles couleur switchent la galerie d'images
+// =============================================================
+
 import React, { useState, useEffect } from "react";
 import Button from "../components/Button/Button";
 import { Header } from "../components/Header/Header";
@@ -12,11 +18,7 @@ import { addToCart } from "../services/cartService";
 import api from "../services/api";
 
 function ProductDetail() {
-    // ETATS & HOOKS
-
-    // permet d'afficher le message d'ajout ou de suppression des favoris
-    const [error, setError] = useState("");
-    // set les données nécessaires à la page product detail
+    // -- ETATS PRODUIT + VARIATIONS --
     const [product, setProduct] = useState<any>({
         images: [],
         name: "",
@@ -24,50 +26,41 @@ function ProductDetail() {
         description: "",
         _id: "",
     });
-    // set les variations du produit
-    const [variations, setVariations] = useState<any[]>([
-        {
-            color: "",
-            size: "",
-            quantity: 0,
-        },
-    ]);
-    // set la donnée favori pour afficher le coeur plein ou vide
-    const [isFavori, setIsFavori] = useState(false);
-    // set les favoris de l'utilisateur pour vérifier si le produit est dans les favoris ou pas
-    const [userFavori, setUserFavori] = useState([]);
-    // ajoute une variable d'état pour stocker les produits du panier de l'utilisateur
-    const [userCart, setUserCart] = useState<string[]>([]);
-    // Récupère l'ID de la route
-    const { id } = useParams();
-    // set le message d'ajout ou de suppression du panier
-    const [message, setMessage] = useState("");
-    // set l'état pour stocker la couleur sélectionnée par l'utilisateur
-    const [selectedColor, setSelectedColor] = useState("");
-    // set l'état pour stocker la taille sélectionnée par l'utilisateur
-    const [selectedSize, setSelectedSize] = useState("");
-    // set l'état pour stocker la quantité sélectionnée par l'utilisateur
-    const [selectedQuantity, setSelectedQuantity] = useState(1);
+    const [variations, setVariations] = useState<any[]>([]);
 
-    // useEffect pour fetch les données du produit et vérifier si le produit est dans les favoris ou pas
+    // -- ETATS SELECTION UTILISATEUR --
+    const [selectedColor, setSelectedColor] = useState("");
+    const [selectedSize, setSelectedSize] = useState("");
+    const [selectedQuantity, setSelectedQuantity] = useState(1);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+    // -- ETATS FAVORIS --
+    const [isFavori, setIsFavori] = useState(false);
+
+    // -- ETATS UI --
+    const [error, setError] = useState("");
+    const [message, setMessage] = useState("");
+
+    // -- PARAMS URL --
+    const { id } = useParams();
+
+    // =============================================================
+    // CHARGEMENT DES DONNEES
+    // =============================================================
+
     useEffect(() => {
-        // si je n'ai pas d'id, je ne fetch rien
         if (!id) return;
-        // fetch les données du produit
+
         async function fetchData() {
             try {
-                // fetch produit
+                // Recuperer le produit et ses variations
                 const productResponse = await api.get(`/products/${id}`);
                 setProduct(productResponse.data.product);
                 setVariations(productResponse.data.variations || []);
-                console.log(productResponse.data.variations);
 
-                // fetch favoris utilisateur
+                // Recuperer les favoris de l'utilisateur
                 const favorisResponse = await api.get("/favoris");
                 const favoris = favorisResponse.data.favoris || [];
-                setUserFavori(favoris);
-
-                // vérifier si le produit est dans les favoris
                 setIsFavori(favoris.some((favori: any) => favori._id === id));
             } catch (error) {
                 console.error("Erreur fetch produit ou favoris:", error);
@@ -77,203 +70,368 @@ function ProductDetail() {
         fetchData();
     }, [id]);
 
-    // fonction pour récupérer la première image du produit
-    const firstImage = () => {
-        if (product?.images && product.images.length > 0) {
-            return product.images[0];
-        }
-        return "";
-    };
+    // =============================================================
+    // LOGIQUE GALERIE D'IMAGES
+    // =============================================================
 
-    // fonction pour récupérer la deuxième image du produit si elle existe, sinon la première image
-    const smallImage = () => {
-        if (!product?.images) return "";
-        for (let i = 1; i < product.images.length; i++) {
-            if (product.images[i]) {
-                return product.images[i];
+    // Retourne la liste d'images a afficher dans la galerie
+    // Si une couleur est selectionnee et que ses variations ont des images → ces images
+    // Sinon → les images du produit
+    // Fallback → tableau vide
+    const getGalleryImages = () => {
+        // Filtrer par couleur si une est selectionnee, sinon prendre toutes les variations
+        const targetVariations = selectedColor
+            ? variations.filter((v: any) => v.color === selectedColor)
+            : variations;
+
+        // Collecter toutes les images des variations ciblees (sans doublons)
+        const allImages: string[] = [];
+        for (let i = 0; i < targetVariations.length; i++) {
+            const v = targetVariations[i];
+            if (v.images && v.images.length > 0) {
+                for (let j = 0; j < v.images.length; j++) {
+                    const img = v.images[j];
+                    if (img && img.trim() !== "" && !allImages.includes(img)) {
+                        allImages.push(img);
+                    }
+                }
             }
         }
-        return "";
+
+        if (allImages.length > 0) {
+            return allImages;
+        }
+
+        // Fallback : images du produit (pour la home / vignette)
+        if (product.images && product.images.length > 0) {
+            return product.images;
+        }
+
+        return [];
     };
 
-    const handleFavoriClick = async () => {
-        if (!id) return;
+    // Retourne les pastilles couleur : une par couleur unique avec sa premiere image
+    const getColorSwatches = () => {
+        const seen: string[] = [];
+        const swatches: { color: string; image: string }[] = [];
 
-        const previousState = isFavori;
-        const nextState = !isFavori;
-        setIsFavori(nextState); // mise à jour immédiate pour l'UI
-
-        try {
-            let response;
-            if (previousState) {
-                // suppression du favori
-                response = await api.delete(`/favoris/${id}`);
-            } else {
-                // ajout du favori
-                response = await api.post(`/favoris/${id}`);
+        for (let i = 0; i < variations.length; i++) {
+            const v = variations[i];
+            if (v.color && !seen.includes(v.color)) {
+                seen.push(v.color);
+                // Premiere image de cette variation comme miniature de la pastille
+                const firstImage = v.images && v.images.length > 0 ? v.images[0] : "";
+                swatches.push({
+                    color: v.color,
+                    image: firstImage,
+                });
             }
-            setError(response.data.message); // message serveur
-        } catch (err: any) {
-            console.error("Erreur favoris:", err);
-            setError(
-                err.response?.data?.message ||
-                    "Erreur lors de la mise à jour des favoris"
+        }
+
+        return swatches;
+    };
+
+    // Retourne le prix a afficher
+    // Si couleur + taille selectionnees → prix exact de cette variation
+    // Sinon → "A partir de X EUR" (prix minimum des variations)
+    // Fallback → prix du produit
+    const getDisplayPrice = () => {
+        // Prix exact si couleur + taille selectionnees
+        if (selectedColor && selectedSize) {
+            const match = variations.find(
+                (v: any) => v.color === selectedColor && v.size === selectedSize
             );
-            // rollback si erreur
-            setIsFavori(previousState);
+            if (match && match.price) {
+                return match.price.toFixed(2) + " \u20AC";
+            }
         }
+
+        // Prix minimum des variations
+        if (variations.length > 0) {
+            const prices = variations
+                .filter((v: any) => v.price && v.price > 0)
+                .map((v: any) => v.price);
+
+            if (prices.length > 0) {
+                const minPrice = Math.min(...prices);
+                const maxPrice = Math.max(...prices);
+
+                // Si tous les prix sont identiques, pas besoin de "A partir de"
+                if (minPrice === maxPrice) {
+                    return minPrice.toFixed(2) + " \u20AC";
+                }
+                return "A partir de " + minPrice.toFixed(2) + " \u20AC";
+            }
+        }
+
+        // Fallback : prix du produit
+        if (product.price) {
+            return product.price.toFixed(2) + " \u20AC";
+        }
+
+        return "0.00 \u20AC";
     };
 
-    // Pour chaque variation du produit, on recupere les couleurs et les tailles disponibles pour les afficher dans la modal
-    // On utilise un Set pour ne pas avoir de doublons dans les listes de couleurs et tailles
-    const colors = [...new Set(variations.map((variation) => variation.color))];
-    const sizes = [...new Set(variations.map((variation) => variation.size))];
+    // =============================================================
+    // LOGIQUE COULEURS / TAILLES DISPONIBLES
+    // =============================================================
 
+    // Map des choix : { "Rouge" => ["S", "M"], "Bleu" => ["M", "L"] }
     const choix = new Map<string, string[]>();
-    // je parcours les variations du produit pour construire une map des choix possibles : { "Rouge" => ["S", "M"], "Bleu" => ["M", "L"] }
     for (let i = 0; i < variations.length; i++) {
         const variation = variations[i];
-        // si la couleur n'est pas encore dans la map, je l'ajoute avec une liste de tailles vide
         if (!choix.has(variation.color)) {
             choix.set(variation.color, []);
         }
-        // j'ajoute la taille de la variation à la liste des tailles disponibles pour cette couleur
         const existingSizes = choix.get(variation.color) || [];
-        // je vérifie que la taille n'est pas déjà dans la liste avant de l'ajouter
         if (!existingSizes.includes(variation.size)) {
             existingSizes.push(variation.size);
             choix.set(variation.color, existingSizes);
         }
     }
 
-    // fonction pour vérifier si une taille est disponible pour la couleur sélectionnée
+    // Tailles disponibles pour la couleur selectionnee
+    const sizes = [...new Set(variations.map((v) => v.size))];
+
     function sizeDisponible(size: string) {
-        // si aucune couleur n'est sélectionnée, toutes les tailles sont disponibles
-        if (!selectedColor) {
-            return true;
-        }
-        // je vérifie dans la map des choix si la taille est disponible pour la couleur sélectionnée
+        if (!selectedColor) return true;
         return choix.get(selectedColor)?.includes(size) || false;
     }
 
-    // fonction pour vérifier si une couleur est disponible pour la taille sélectionnée
-    function colorDisponible(color: string) {
-        console.log("Vérification disponibilité couleur :", choix);
-        return selectedSize === "" || choix.get(color)?.includes(selectedSize);
-    }
+    // =============================================================
+    // HANDLERS
+    // =============================================================
 
-    // fonction qui retourne les options de tailles disponibles pour la couleur sélectionnée
-    const disponibleSizes = () => {
-        return sizes.filter(sizeDisponible).map((size) => (
-            <option key={size} value={size}>
-                {size}
-            </option>
-        ));
+    // Clic sur une pastille couleur → change la galerie
+    const handleColorSwatchClick = (color: string) => {
+        if (selectedColor === color) {
+            // Deselectionner
+            setSelectedColor("");
+        } else {
+            setSelectedColor(color);
+        }
+        setSelectedImageIndex(0);
     };
 
-    // fonction qui retourne les options de couleurs disponibles pour le produit
-    const disponibleColors = () => {
-        return colors.filter(colorDisponible).map((color) => (
-            <option key={color} value={color}>
-                {color}
-            </option>
-        ));
+    // Clic sur une vignette → change l'image principale
+    const handleThumbnailClick = (index: number) => {
+        setSelectedImageIndex(index);
     };
 
+    // Quantite
     const handleIncreaseQuantity = () => {
         if (selectedQuantity < 10) {
             setSelectedQuantity(selectedQuantity + 1);
         }
     };
+
     const handleDecreaseQuantity = () => {
         if (selectedQuantity > 1) {
             setSelectedQuantity(selectedQuantity - 1);
         }
     };
 
-    // fonction pour ajouter un produit dans le panier de l'utilisateur
-    const handleAddCartClick = (
-        color: string,
-        size: string,
-        quantity: number
-    ) => {
-        // si je n'ai pas d'id je ne fetch pas
+    // Favoris
+    const handleFavoriClick = async () => {
+        if (!id) return;
+
+        const previousState = isFavori;
+        const nextState = !isFavori;
+        setIsFavori(nextState);
+
+        try {
+            let response;
+            if (previousState) {
+                response = await api.delete(`/favoris/${id}`);
+            } else {
+                response = await api.post(`/favoris/${id}`);
+            }
+            setError(response.data.message);
+        } catch (err: any) {
+            console.error("Erreur favoris:", err);
+            setError(
+                err.response?.data?.message ||
+                    "Erreur lors de la mise a jour des favoris"
+            );
+            setIsFavori(previousState);
+        }
+    };
+
+    // Ajout au panier
+    const handleAddCartClick = (color: string, size: string, quantity: number) => {
         if (!product?._id) return;
 
-        addToCart(product._id, color, size, quantity).then((message) => {
-            setError(message);
+        addToCart(product._id, color, size, quantity).then((msg) => {
+            setError(msg);
         });
     };
+
+    // =============================================================
+    // VARIABLES CALCULEES POUR LE RENDU
+    // =============================================================
+
+    const galleryImages = getGalleryImages();
+    const colorSwatches = getColorSwatches();
+    const displayPrice = getDisplayPrice();
+
+    // Image principale actuellement affichee
+    const currentMainImage = galleryImages.length > 0
+        ? galleryImages[selectedImageIndex] || galleryImages[0]
+        : "";
 
     return (
         <div className="page-container">
             <Header />
 
             <div className="page-content">
-                <div className="image-container">
-                    <img
-                        className="product-main-image"
-                        src={firstImage()}
-                        alt="Product"
-                    />
-                    <FontAwesomeIcon
-                        icon={faHeart}
-                        onClick={handleFavoriClick}
-                        style={isFavori ? { color: "#E9BE59" } : {}}
-                        className="heart-icon"
-                    />
-                </div>
-
-                <div className="pd-header">
-                    <h2>{product?.name || "Produit"}</h2>
-                    <h2>{product?.price || 0}€</h2>
-                </div>
-
                 <Message message={error} variant="error" />
 
-                <div>
-                    <img src={smallImage()} alt="Product" />
-                </div>
+                {/* ============================================= */}
+                {/* GALERIE : vignettes | image principale | infos */}
+                {/* ============================================= */}
+                <div className="pd-gallery-layout">
 
-                <div>
-                    <h3>A propos</h3>
-                    <p>{product?.description || ""}</p>
-                </div>
-                <div className="product-variation">
-                    <select
-                        className="variation-list"
-                        onChange={(e) => setSelectedColor(e.target.value)}
-                    >
-                        <option value="">
-                            ---Veuillez choisir une couleur---
-                        </option>
-                        {disponibleColors()}
-                    </select>
-                    <select
-                        className="variation-list"
-                        onChange={(e) => setSelectedSize(e.target.value)}
-                    >
-                        <option value="">
-                            ---Veuillez choisir une taille---
-                        </option>
-                        {disponibleSizes()}
-                    </select>
-                </div>
-                <div className="product-quantity">
-                    <button onClick={handleDecreaseQuantity}>-</button>
-                    <span>{selectedQuantity}</span>
-                    <button onClick={handleIncreaseQuantity}>+</button>
-                    <Button
-                        onClick={() =>
-                            handleAddCartClick(
-                                selectedColor,
-                                selectedSize,
-                                selectedQuantity
-                            )
-                        }
-                    >
-                        Ajouter au panier
-                    </Button>
+                    {/* -- Vignettes (thumbnails) -- */}
+                    <div className="pd-thumbnails">
+                        {galleryImages.map((img, index) => (
+                            <img
+                                key={index}
+                                src={img}
+                                alt={"Vignette " + (index + 1)}
+                                className={
+                                    "pd-thumbnail " +
+                                    (index === selectedImageIndex ? "pd-thumbnail-active" : "")
+                                }
+                                onClick={() => handleThumbnailClick(index)}
+                            />
+                        ))}
+                    </div>
+
+                    {/* -- Image principale -- */}
+                    <div className="pd-main-image-container">
+                        {currentMainImage ? (
+                            <img
+                                src={currentMainImage}
+                                alt={product.name || "Produit"}
+                                className="pd-main-image"
+                            />
+                        ) : (
+                            <div className="pd-no-image">Aucune image</div>
+                        )}
+
+                        {/* Icone coeur favori */}
+                        <FontAwesomeIcon
+                            icon={faHeart}
+                            onClick={handleFavoriClick}
+                            style={isFavori ? { color: "#E9BE59" } : {}}
+                            className="heart-icon"
+                        />
+                    </div>
+
+                    {/* -- Infos produit (colonne droite) -- */}
+                    <div className="pd-info">
+                        <h1 className="pd-product-name">
+                            {product.name || "Produit"}
+                        </h1>
+                        <p className="pd-product-price">{displayPrice}</p>
+
+                        {/* -- Pastilles couleur -- */}
+                        {colorSwatches.length > 0 && (
+                            <div className="pd-color-section">
+                                <p className="pd-section-label">Couleur</p>
+                                <div className="pd-color-swatches">
+                                    {colorSwatches.map((swatch) => (
+                                        <button
+                                            key={swatch.color}
+                                            className={
+                                                "pd-color-swatch " +
+                                                (selectedColor === swatch.color
+                                                    ? "pd-color-swatch-active"
+                                                    : "")
+                                            }
+                                            onClick={() => handleColorSwatchClick(swatch.color)}
+                                            title={swatch.color}
+                                        >
+                                            {swatch.image ? (
+                                                <img
+                                                    src={swatch.image}
+                                                    alt={swatch.color}
+                                                    className="pd-swatch-image"
+                                                />
+                                            ) : (
+                                                <span className="pd-swatch-text">
+                                                    {swatch.color}
+                                                </span>
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* -- Selection taille -- */}
+                        {sizes.length > 0 && (
+                            <div className="pd-size-section">
+                                <p className="pd-section-label">Taille</p>
+                                <select
+                                    className="pd-select"
+                                    value={selectedSize}
+                                    onChange={(e) => setSelectedSize(e.target.value)}
+                                >
+                                    <option value="">-- Choisir une taille --</option>
+                                    {sizes.filter(sizeDisponible).map((size) => (
+                                        <option key={size} value={size}>
+                                            {size}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
+
+                        {/* -- Quantite + Ajout panier -- */}
+                        <div className="pd-quantity-section">
+                            <p className="pd-section-label">Quantite</p>
+                            <div className="pd-quantity-row">
+                                <button
+                                    className="pd-quantity-btn"
+                                    onClick={handleDecreaseQuantity}
+                                >
+                                    -
+                                </button>
+                                <span className="pd-quantity-value">
+                                    {selectedQuantity}
+                                </span>
+                                <button
+                                    className="pd-quantity-btn"
+                                    onClick={handleIncreaseQuantity}
+                                >
+                                    +
+                                </button>
+                            </div>
+
+                            <Button
+                                onClick={() =>
+                                    handleAddCartClick(
+                                        selectedColor,
+                                        selectedSize,
+                                        selectedQuantity
+                                    )
+                                }
+                            >
+                                Ajouter au panier
+                            </Button>
+                        </div>
+
+                        {/* -- Description -- */}
+                        {product.description && (
+                            <div className="pd-description-section">
+                                <p className="pd-section-label">Description</p>
+                                <p className="pd-description-text">
+                                    {product.description}
+                                </p>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
 

@@ -48,13 +48,14 @@ async function createVariation(req: Request, res: Response) {
         .json({ message: "Couleur et taille sont obligatoires" });
     }
 
-    // Creer la variation
+    // Creer la variation (avec images si fournies)
     const variation = new Variation({
       productId: req.params.productId,
       color: req.body.color,
       size: req.body.size,
       price: req.body.price,
       stock: req.body.stock,
+      images: req.body.images || [],
     });
 
     await variation.save();
