@@ -79,7 +79,7 @@ function AppContent() {
 
         {/* --- Route panier + paiement --- */}
         <Route path="/cart" element={<Cart />} />
-        <Route path="/paiement" element={<Paiement />} />
+        <Route path="/paiement/:id" element={<Paiement />} />
 
         {/* --- Route commandes --- */}
         <Route path="/orders" element={<OrdersList />} />

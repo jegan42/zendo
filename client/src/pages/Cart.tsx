@@ -50,6 +50,7 @@ function Cart() {
         );
 
         setCart(products);
+        console.log("Panier chargé:", products);
         // On notifie le Header que le panier vient d'être chargé,
         // pour que le badge affiche le bon nombre dès l'ouverture de la page.
         notifyCartUpdated();
@@ -75,7 +76,7 @@ function Cart() {
         <div className="product-info">
           <div>
             <h3 className="product-title">{item.productData?.name}</h3>
-            <p className="product-price">{item.productData?.price}€</p>
+            <p className="product-price">{item.variation?.price}€</p>
           </div>
           <div className="product-bottom">
             <div className="product-variations-info">
@@ -145,17 +146,15 @@ function Cart() {
 
   const totalPrice = cart.reduce(
     (total, item) =>
-      total + (item.productData?.price || 0) * (item.quantity || 0),
+      total + (item.variation?.price || 0) * (item.quantity || 0),
     0,
   );
 
   const handlePaymentClick = () => {
-    addOrder(totalPrice).then((message) => {
+    addOrder(totalPrice).then((data) => {
+      const message = data.message;
       if (message === "Commande créée avec succès") {
-        setCart([]);
-        // Panier vidé après paiement → badge remis à 0 dans le Header
-        notifyCartUpdated();
-        window.location.href = "/paiement";
+        window.location.href = "/paiement/" + data.orderNumber;
       }
     });
   };

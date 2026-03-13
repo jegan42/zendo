@@ -26,10 +26,10 @@ function Favoris() {
   const [favoris, setFavoris] = useState<any[]>([]);
   const [error, setError] = useState("");
   // On stocke l'id du favori selectionne pour ouvrir le bon modal (un seul a la fois)
-  const [selectedFavoriId, setSelectedFavoriId] = useState<string | null>(null);
+  const [selectedFavoriId, setSelectedFavoriId] = useState<string>("");
 
   const [showModal, setShowModal] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+
   useEffect(function () {
     // Etape 1 : fetch les favoris de l'utilisateur
     api.get("/favoris").then(function (response) {
@@ -53,6 +53,10 @@ function Favoris() {
       // Etape 3 : une fois TOUS les fetch finis, on met a jour le state
       Promise.all(variationsPromises).then(function (favorisAvecVariations) {
         setFavoris(favorisAvecVariations);
+        console.log(
+          "Favoris récupérés avec variations:",
+          favorisAvecVariations,
+        );
       });
     });
   }, []);
@@ -75,7 +79,7 @@ function Favoris() {
           <div className="favoris-info">
             <h3 className="favoris-title">{favori.name}</h3>
             <div className="favoris-bottom">
-              <p className="favoris-price">{favori.price}€</p>
+              <p className="favoris-price">{favori.variations[0]?.price}€</p>
               <FontAwesomeIcon
                 onClick={function () {
                   setSelectedFavoriId(favori._id);
@@ -88,7 +92,7 @@ function Favoris() {
               <ProductModal
                 isOpen={selectedFavoriId === favori._id}
                 onClose={function () {
-                  setSelectedFavoriId(null);
+                  setSelectedFavoriId("");
                 }}
                 onConfirm={function ({ color, size, quantity }: any) {
                   addToCart(favori._id, color, size, quantity).then(function (
@@ -116,13 +120,13 @@ function Favoris() {
         <div className="page-favoris">
           <div className="page-favoris-list">{favorisList()}</div>
           <ProductModal
-            key={selectedProduct?._id}
+            key={selectedFavoriId}
             isOpen={showModal}
             onClose={() => setShowModal(false)}
             onConfirm={({ color, size, quantity }: any) => {
               // j'appelle la fonction addToCart du service cartService pour ajouter le produit au panier de l'utilisateur
               // .then pour récupérer le message d'ajout au panier et l'afficher à l'utilisateur
-              addToCart(selectedProduct._id, color, size, quantity).then(
+              addToCart(selectedFavoriId, color, size, quantity).then(
                 (message) => {
                   setError(message);
                   notifyCartUpdated(); // prévient le Header que le panier a été mis à jour, pour que le badge se rafraîchisse
@@ -130,7 +134,12 @@ function Favoris() {
               );
             }}
             title="Choisissez une variation"
-            variations={selectedProduct?.variations || []}
+            variations={
+              selectedFavoriId
+                ? favoris.find((f) => f._id === selectedFavoriId)?.variations ||
+                  []
+                : []
+            }
           />
         </div>
       </div>
