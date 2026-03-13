@@ -28,4 +28,16 @@ const getUserOrders = async (): Promise<any[]> => {
     }
 };
 
-export { addOrder, getUserOrders };
+//récupérer les produits des commandes
+const getRecentProducts = async (): Promise<any[]> => {
+    try {
+        const response = await api.get("/orders/recent-products");
+        // On retourne les données formatées par le backend
+        return response.data; 
+    } catch (err: any) {
+        console.error("Erreur lors de la récupération des produits récents :", err);
+        throw err;
+    }
+};
+
+export { addOrder, getUserOrders, getRecentProducts};

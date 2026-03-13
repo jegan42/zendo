@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addOrder, deleteOrder, getOrder, getOrderById } from "../controllers/order";
+import { addOrder, deleteOrder, getOrder, getOrderById, getRecentProducts } from "../controllers/order";
 import { authMiddleware } from "../middleware/authMiddleware";
 
 // On cree un "routeur" Express
@@ -7,6 +7,9 @@ const router = Router();
 
 // Quand on recoit un POST sur /orders/:id, on appelle la fonction order du controller
 router.post("/", authMiddleware, addOrder);
+
+// Quand on récupère les produits récents de l'utilisateur connecté
+router.get("/recent-products", authMiddleware, getRecentProducts);
 
 // Quand on récupère la liste des commandes de l'utilisateur connecté
 router.get("/my-orders", authMiddleware, getOrderById);
