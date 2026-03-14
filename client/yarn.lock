@@ -1034,7 +1034,7 @@
     prop-types "^15.8.1"
     react-is "^19.2.3"
 
-"@mui/x-data-grid@^8.27.5":
+"@mui/x-data-grid@^8.27.4":
   version "8.27.5"
   resolved "https://registry.yarnpkg.com/@mui/x-data-grid/-/x-data-grid-8.27.5.tgz#bf9afa8ea9e158fc997ae4df0dc3b1223921ad7e"
   integrity sha512-jlm/ldbPtw3i0rQGXUSXPjNlvjaMz9PVYFHq7n2ZyR8kUDVAdPE1m5mP1k/wuwiAznR74drihKjx8AUgbRSdQQ==
