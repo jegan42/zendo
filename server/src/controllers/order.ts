@@ -166,7 +166,7 @@ async function addOrder(req: Request, res: Response) {
             "cart.product"
         );
         if (!user) {
-            return res.status(404).json({ message: "Utilisateur non trouvé" });
+            return res.status(404).json3({ message: "Utilisateur non trouvé" });
         }
 
         // --- PARRIE AJOUTÉE PAR SIMENG : GÉNÉRATION DU NUMÉRO DE COMMANDE ---
@@ -234,4 +234,78 @@ async function addOrder(req: Request, res: Response) {
 
 async function deleteOrder(req: Request, res: Response) {}
 
-export { addOrder, deleteOrder, getOrder, getOrderById };
+// Route : GET /api/orders/recent-products
+async function getRecentProducts(req: Request, res: Response) {
+    try {
+        const userId = (req as any).userId;
+        if (!userId) return res.status(401).json({ message: "Non autorisé" });
+
+        // 1. Calculer la date (12 derniers mois)
+        const twelveMonthsAgo = new Date();
+        twelveMonthsAgo.setFullYear(twelveMonthsAgo.getFullYear() - 1);
+
+        // 2. Récupérer les commandes (Triées par date directement par MongoDB)
+        const orders = await Order.find({
+            buyerId: userId,
+            createdAt: { $gte: twelveMonthsAgo },
+        })
+            .sort({ createdAt: -1 })
+            .lean(); // <--- ici : -1 = Décroissant (Récent -> Ancien)
+
+        if (!orders || orders.length === 0) {
+            return res.status(200).json([]);
+        }
+
+        // 3. Récupérer toutes les lignes de commande liées
+        const orderIds = orders.map((o) => o._id);
+        const orderLines = await OrderLine.find({ orderId: { $in: orderIds } })
+            .populate({
+                path: "variantId",
+                populate: {
+                    path: "productId",
+                    model: "Product",
+                },
+            })
+            .lean();
+
+        // 4. Formater les produits de manière sécurisée
+        const formattedProducts = orderLines
+            .map((line: any) => {
+                // Sécurité : on vérifie si variantId et productId existent
+                const variation = line.variantId;
+                const product = variation?.productId;
+
+                // On cherche la commande parente pour la date
+                const parentOrder = orders.find(
+                    (o) => o._id.toString() === line.orderId.toString()
+                );
+
+                // Si le produit n'existe plus en base, on évite le crash
+                if (!product) return null;
+
+                return {
+                    id: line._id,
+                    name: product.name || "Produit sans nom",
+                    // On prend la première image du tableau
+                    img:
+                        product.images && product.images.length > 0
+                            ? product.images[0]
+                            : "/placeholder.png",
+                    date: parentOrder ? parentOrder.createdAt : new Date(),
+                    color: variation?.color || "N/A",
+                    size: variation?.size || "N/A",
+                };
+            })
+            .filter((item) => item !== null); // On enlève les produits qui n'ont pas pu être chargés
+
+        return res.status(200).json(formattedProducts);
+    } catch (error: any) {
+        console.error("ERREUR CRITIQUE BACKEND:", error);
+        return res.status(500).json({
+            message: "Erreur serveur",
+            details: error.message,
+        });
+    }
+}
+
+export { addOrder, deleteOrder, getOrder, getOrderById, getRecentProducts };
