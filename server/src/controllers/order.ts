@@ -166,7 +166,7 @@ async function addOrder(req: Request, res: Response) {
             "cart.product"
         );
         if (!user) {
-            return res.status(404).json3({ message: "Utilisateur non trouvé" });
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
         }
 
         // --- PARRIE AJOUTÉE PAR SIMENG : GÉNÉRATION DU NUMÉRO DE COMMANDE ---
