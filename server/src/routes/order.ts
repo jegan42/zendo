@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addOrder, deleteOrder, getOrder } from "../controllers/order";
+import { addOrder, deleteOrder, getOrder, getOrderById } from "../controllers/order";
 import { authMiddleware } from "../middleware/authMiddleware";
 
 // On cree un "routeur" Express
@@ -7,6 +7,12 @@ const router = Router();
 
 // Quand on recoit un POST sur /orders/:id, on appelle la fonction order du controller
 router.post("/", authMiddleware, addOrder);
+
+// Quand on récupère la liste des commandes de l'utilisateur connecté
+router.get("/my-orders", authMiddleware, getOrderById);
+
+// Quand on récupère les détails d'une commande spécifique
+router.get("/:orderId", authMiddleware, getOrder);
 
 // Quand on recoit un DELETE sur /orders/:id, on appelle la fonction order du controller
 router.delete("/:orderId", deleteOrder);

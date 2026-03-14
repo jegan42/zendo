@@ -11,11 +11,9 @@ import Order from "../models/Order";
 import OrderLine from "../models/OrderLine";
 
 // ---------------------------------------------------------
-// RÉCUPÉRER UNE COMMANDE PAR ORDER ID
+//RÉCUPÉRER LES DÉTAILS COMPLETS D'UNE COMMANDE
 // Route : GET /api/orders/:orderId
 // ---------------------------------------------------------
-
-// à créer une fois que les commandes seront implémentées dans la base de données
 
 async function getOrder(req: Request, res: Response) {
   try {
@@ -83,10 +81,59 @@ async function getOrder(req: Request, res: Response) {
   }
 }
 
+
+
+ // ---------------------------------------------------------
+// RÉCUPÉRER TOUTES LES COMMANDES D'UN UTILISATEUR (Liste)
+// Route : GET /api/orders/my-orders
 // ---------------------------------------------------------
-// RÉCUPÉRER TOUTES LES COMMANDES D'UN UTILISATEUR
-// Route : GET /api/orders/:id (user id)
-// ---------------------------------------------------------
+interface SellerDoc {
+    shopName: string;
+    userId: any;
+}
+async function getOrderById(req: Request, res: Response) {
+    try {
+        const userId = (req as any).userId;
+        if (!userId) return res.status(401).json({ message: "Non autorisé" });
+
+        const orders = await Order.find({ buyerId: userId }).sort({ createdAt: -1 });
+
+        const ordersWithShops = await Promise.all(orders.map(async (order: any) => {
+            const lines = await OrderLine.find({ orderId: order._id })
+                .populate({
+                    path: "variantId",
+                    populate: { path: "productId", select: "sellerId" }
+                });
+
+            const sellerIds = [...new Set(lines.map(line => 
+                (line.variantId as any)?.productId?.sellerId?.toString()
+            ))];
+
+            const mongoose = require("mongoose");
+            const Seller = mongoose.model("Seller");
+            
+            // 2. On utilise l'interface ici pour que sellers soit typé
+            const sellers = await Seller.find({ userId: { $in: sellerIds } }, "shopName") as SellerDoc[];
+            
+            // 3. Plus d'erreur ici car TypeScript sait que s est un SellerDoc
+            const shopNames = sellers.map(s => s.shopName);
+
+            return {
+                _id: order._id,
+                orderNumber: order.orderNumber,
+                totalAmount: order.totalAmount,
+                status: order.status,
+                createdAt: order.createdAt,
+                shopNames: shopNames
+            };
+        }));
+
+        res.status(200).json(ordersWithShops);
+    } catch (error) {
+        console.error("Erreur getOrderById:", error);
+        res.status(500).json({ message: "Erreur serveur" });
+    }
+}
 
 async function getOrderById(req: Request, res: Response) {}
 
