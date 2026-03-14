@@ -1,5 +1,6 @@
 import React from "react";
 import "./OrderPreview.css"
+import { useNavigate } from "react-router-dom";
 
 interface PreviewProps {
   orderId: string;
@@ -20,6 +21,7 @@ const OrderPreview = ({ orderId, date, total, status, packages }: PreviewProps) 
             <span className="info-value">{orderId}</span>
           </div>
           <div className="order-action-row">
+            {/* On pourrait ajouter un lien vers /orders/details/:id ici */}
             <button className="btn-view-order">Voir la commande</button>
           </div>
         </div>
@@ -46,14 +48,13 @@ const OrderPreview = ({ orderId, date, total, status, packages }: PreviewProps) 
         <div className="packages-section">
           {packages.map((pkg, index) => (
             <div key={index} className="package-row">
-              <span>{pkg} :</span>
+              <span>{pkg}</span>
               <button className="btn-track">Suivre -{">"}</button>
             </div>
           ))}
         </div>
       </div>
       
-      {/* Séparateur ajouté ici pour garantir sa présence sur mobile */}
       <hr className="order-divider" />
     </>
   );
