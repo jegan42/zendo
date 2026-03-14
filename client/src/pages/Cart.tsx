@@ -163,10 +163,8 @@ function Cart() {
         };
         removeFromCart(item);
     };
-
     const totalPrice = cart.reduce(
-        (total, item) =>
-            total + (item.variation?.price || 0) * (item.quantity || 0),
+        (total, item) => total + (item.price || 0) * (item.quantity || 0),
         0
     );
 
