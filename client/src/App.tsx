@@ -79,7 +79,7 @@ function AppContent() {
 
         {/* --- Route panier + paiement --- */}
         <Route path="/cart" element={<Cart />} />
-        <Route path="/paiement" element={<Paiement />} />
+        <Route path="/paiement/:id" element={<Paiement />} />
 
         {/* --- Route commandes --- */}
         <Route path="/orders" element={<OrdersList />} />
@@ -90,7 +90,10 @@ function AppContent() {
         {/* --- Routes vendeur --- */}
         <Route path="/vendeur" element={<SellerHome />} />
         <Route path="/vendeur/ajouter-produit" element={<SellerAddProduct />} />
-        <Route path="/vendeur/modifier-produit/:id" element={<SellerEditProduct />} />
+        <Route
+          path="/vendeur/modifier-produit/:id"
+          element={<SellerEditProduct />}
+        />
 
         {/* --- Routes dynamiques (ProductList par famille/categorie) --- */}
         {/* IMPORTANT : ces routes doivent etre APRES les routes fixes
@@ -113,7 +116,7 @@ function App() {
   return (
     // BrowserRouter : active le systeme de routing (navigation entre pages)
     // Grace a lui on remplace le composant appele sans reload
-   <Provider store={store}>
+    <Provider store={store}>
       <BrowserRouter>
         <AppContent />
       </BrowserRouter>

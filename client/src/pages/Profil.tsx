@@ -15,6 +15,7 @@ import { Header } from "../components/Header/Header";
 const Profil = () => {
   return (
     <div className="page-container">
+      <Header />
       {/* Affichage de la partie haute (photo + nom) */}
       <ProfileHeader />
 
