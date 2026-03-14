@@ -1,17 +1,16 @@
 // =============================================================
-// CONTROLLER BUYER - Contient la logique pour les pages de commande
+// CONTROLLER BUYER - Logique pour les pages de commande
 // =============================================================
 
 import { Request, Response } from "express";
 import Product from "../models/Product";
 import Variation from "../models/Variation";
 import User from "../models/User";
-import { Types } from "mongoose";
 import Order from "../models/Order";
 import OrderLine from "../models/OrderLine";
 
 // ---------------------------------------------------------
-//RÉCUPÉRER LES DÉTAILS COMPLETS D'UNE COMMANDE
+// RÉCUPÉRER LES DÉTAILS COMPLETS D'UNE COMMANDE
 // Route : GET /api/orders/:orderId
 // ---------------------------------------------------------
 
@@ -85,10 +84,12 @@ async function getOrder(req: Request, res: Response) {
 // RÉCUPÉRER TOUTES LES COMMANDES D'UN UTILISATEUR (Liste)
 // Route : GET /api/orders/my-orders
 // ---------------------------------------------------------
+
 interface SellerDoc {
     shopName: string;
     userId: any;
 }
+
 async function getOrderById(req: Request, res: Response) {
     try {
         const userId = (req as any).userId;
@@ -150,7 +151,6 @@ async function getOrderById(req: Request, res: Response) {
 // ---------------------------------------------------------
 // AJOUT ORDER
 // Route : POST /api/orders
-// Body attendu : { productId, totalPrice }
 // ---------------------------------------------------------
 
 async function addOrder(req: Request, res: Response) {
@@ -230,10 +230,8 @@ async function addOrder(req: Request, res: Response) {
 }
 // ---------------------------------------------------------
 // DELETE ORDER
-// Route : DELETE /api/orders/:orderId
 // ---------------------------------------------------------
 
-// à créer une fois que les commandes seront implémentées dans la base de données
 async function deleteOrder(req: Request, res: Response) {}
 
-export { addOrder, deleteOrder, getOrder, getOrderById };
+export { addOrder, deleteOrder, getOrder, getOrderById, getRecentProducts };

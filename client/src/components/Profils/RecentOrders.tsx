@@ -1,50 +1,58 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./RecentOrders.css";
-import img from "../../asset/Logo/product.png";
+import { getRecentProducts} from "../../services/orderService";
+import { formatDistanceToNow } from "date-fns"; //  pour les dates "il y a X jours"
+import { fr } from "date-fns/locale";
 
-  // SIMULATION : Liste d'articles provenant normalement de GET /api/orders
- const RecentOrders = () => {
-  // Simulation des données (sera remplacé par route GET plus tard)
-  const items = [
-    { id: 1, name: "McWay Falls", date: "2 weeks ago", img: img },
-    { id: 2, name: "Blue Mesh", date: "1 month ago", img: img },
-    { id: 3, name: "Sunset", date: "3 months ago", img: img },
-    { id: 4, name: "Ocean", date: "5 months ago", img: img },
-  ];
+  const RecentOrders = () => {
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  /* TODO PLUS TARD :
-    useEffect(() => {
-      const fetchOrders = async () => {
-        try {
-          const response = await api.get("/orders/user"); // ton endpoint réel à la place de ...
-          setOrders(response.data);
-        } catch (error) {
-          console.error("Erreur lors du chargement des commandes :", error);
-          setOrders([]); // optionnel : reset si erreur
-        }
-      };
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await getRecentProducts();
+        console.log("Produits reçus du backend:", data); // Vérifie ici si le tableau est vide
+        setProducts(data);
+      } catch (error) {
+        console.error("Erreur lors du chargement des produits:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
 
-      fetchOrders();
-    }, []);
-  */
+  if (loading) return <div className="recent-order-section">Chargement...</div>;
 
   return (
     <div className="recent-order-section">
       <h3 className="section-title">Achats récents</h3>
       
-      {/* C'est ce div qui gère la ligne unique et le scroll horizontal */}
       <div className="white-card-scroll">
-        {items.map((item) => (
-          <div key={item.id} className="order-item">
-            <div className="order-image-wrapper">
-              <img src={item.img} alt={item.name} className="order-img" />
-              <div className="order-name-overlay">{item.name}</div>
+        {products && products.length > 0 ? (
+          products.map((item) => (
+            <div key={item.id} className="order-item">
+              <div className="order-image-wrapper">
+                <img 
+                  src={item.img} 
+                  alt={item.name} 
+                  className="order-img"
+                  onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.png" }} 
+                />
+                <div className="order-name-overlay">{item.name}</div>
+              </div>
+              <p className="order-date">
+                {item.date ? formatDistanceToNow(new Date(item.date), { addSuffix: true, locale: fr }) : "Date inconnue"}
+              </p>
             </div>
-            <p className="order-date">{item.date}</p>
-          </div>
-        ))}
+          ))
+        ) : (
+          <p className="order-date" style={{ padding: "20px" }}>Aucun achat récent trouvé.</p>
+        )}
       </div>
     </div>
   );
 };
+
 export default RecentOrders;
