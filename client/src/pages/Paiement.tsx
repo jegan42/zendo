@@ -63,6 +63,7 @@ function Paiement() {
 
   if (loading) return <p>Chargement...</p>;
   if (error) return <p className="error">{error}</p>;
+  console.log("Rendu de la page avec les données:", order, address);
 
   return (
     <div className="page-container">
@@ -72,8 +73,8 @@ function Paiement() {
           <p className="section-title">Adresse de livraison</p>
           {address ? (
             <p className="section-content">
-              {address[0].street}, {address[0].postalCode} {address[0].city},{" "}
-              {address[0].country}
+              {address[0]?.street}, {address[0]?.postalCode} {address[0]?.city},{" "}
+              {address[0]?.country}
             </p>
           ) : (
             <p className="section-content">Aucune adresse enregistrée</p>

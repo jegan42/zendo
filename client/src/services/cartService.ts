@@ -16,6 +16,7 @@ const addToCart = async (
   size: string,
   quantity: number,
 ) => {
+  console.log("addToCart appelé avec:", { productId, color, size, quantity });
   // j'envoie une requete POST à l'API pour ajouter le produit au panier de l'utilisateur
   return api
     .post(`/cart/${productId}`, {

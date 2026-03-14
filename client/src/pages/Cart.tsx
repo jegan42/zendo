@@ -38,10 +38,11 @@ function Cart() {
                 const cart = cartResponse.data?.cart ?? [];
 
                 // récupérer les produits du panier
+                console.log("Panier brut depuis API:", cart);
                 const products = await Promise.all(
                     cart.map(async (item: any) => {
                         const productRes = await api.get(
-                            `/products/${item.product}`
+                            `/products/${item.product._id}`
                         );
 
                         return {
