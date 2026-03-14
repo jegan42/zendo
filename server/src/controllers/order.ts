@@ -17,13 +17,69 @@ import OrderLine from "../models/OrderLine";
 
 async function getOrder(req: Request, res: Response) {
   try {
-    const { orderId } = req.params;
-
-    // 1. Récupérer la commande principale
-    const order = await Order.findById(orderId);
+    // Etape 1 : recupere l'id de la commande dans les params de l'URL
+    const orderId = req.params.orderId;
+    console.log("ID de la commande à récupérer :", orderId);
+    // Etape 2 : check order par son id
+    const order = await Order.findOne({ orderNumber: orderId });
     if (!order) {
       return res.status(404).json({ message: "Commande non trouvée" });
     }
+    // Etape 3 : retrouver les lignes de commande (orderLine) associées à cette commande pour récupérer les détails des produits commandés (variantId, quantity)
+    const orderLines = await OrderLine.find({ orderId: order._id }).populate(
+      "variantId",
+    );
+
+    // Etape 4 : pour chaque ligne de commande, je récupère le prix, l'image et le productId
+    const orderItemPrice = await Promise.all(
+      orderLines.map(async (line) => {
+        const variant = line.variantId;
+        const variantData = await Variation.findById(variant._id).then(
+          (data) => {
+            return {
+              price: data?.price || 0,
+              image: data?.images[0] || "/placeholder.png",
+              productId: data?.productId || null,
+            };
+          },
+        );
+        return {
+          ...line.toObject(),
+          price: variantData.price,
+          image: variantData.image,
+          productId: variantData.productId,
+        };
+      }),
+    );
+    // Etape 5 : pour chaque ligne enrichie, récupérer le nom du produit
+    const orderDetails = await Promise.all(
+      orderItemPrice.map(async (line) => {
+        const product = await Product.findById(line.productId);
+        return {
+          ...line,
+          productName: product?.name,
+        };
+      }),
+    );
+    console.log("Détails des produits commandés :", orderDetails);
+    // Etape 6 : renvoyer la commande avec les détails des produits au frontend
+    const orderWithDetails = {
+      ...order.toObject(),
+      items: orderDetails.map((line) => ({
+        productName: line.productName,
+        quantity: line.quantity,
+        price: line.price,
+        image: line.image,
+      })),
+    };
+    // Etape  : renvoyer la commande au frontend
+    res.status(200).json({ order: orderWithDetails });
+    console.log("Commande récupérée:", orderWithDetails);
+  } catch (error) {
+    console.error("Erreur lors de la récupération de la commande :", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+}
 
     // 2. Récupérer les lignes de commande avec un "deep populate"
     // OrderLine -> Variation -> Product
@@ -137,6 +193,8 @@ async function getOrderById(req: Request, res: Response) {
     res.status(500).json({ message: "Erreur serveur" });
   }
 }
+
+async function getOrderById(req: Request, res: Response) {}
 
 // ---------------------------------------------------------
 // AJOUT ORDER

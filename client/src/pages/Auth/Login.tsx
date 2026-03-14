@@ -119,8 +119,8 @@ const Login = () => {
                     <Button type="submit">Se connecter</Button>
                     <Button
                         type="button"
-                        variant="secondary"
-                        size="sm"
+                        variant="google"
+                        // size="sm"
                         className="auth-button"
                         leftIcon={<GoogleLogo />}
                         onClick={triggerGoogleLogin}

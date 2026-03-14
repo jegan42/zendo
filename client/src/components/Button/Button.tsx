@@ -2,7 +2,7 @@ import React from "react";
 import "./Button.css";
 import clsx from "clsx";
 
-type Variant = "primary" | "secondary" | "danger" | "outline";
+type Variant = "primary" | "secondary" | "danger" | "outline" | "google";
 type Size = "sm" | "md" | "lg";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {

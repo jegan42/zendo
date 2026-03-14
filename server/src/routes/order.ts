@@ -20,8 +20,8 @@ router.get("/:orderId", authMiddleware, getOrder);
 // Quand on recoit un DELETE sur /orders/:id, on appelle la fonction order du controller
 router.delete("/:orderId", deleteOrder);
 
-// Quand on recoit un GET sur /orders, on appelle la fonction order du controller
-router.get("/", getOrder);
+// Quand on recoit un GET sur /orders/:id, on appelle la fonction order du controller
+router.get("/:orderId", authMiddleware, getOrder);
 
 // On exporte le routeur pour l'utiliser dans index.ts
 export default router;

@@ -25,10 +25,12 @@ function OrdersList() {
     fetchOrders();
   }, []);
 
+  // TODO: Intégrer l'appel API ici plus tard avec selectedPeriod
+
   return (
     <div className="page-container">
       <Header />
-     
+
       <main className="page-content orders-page">
         <div className="orders-wrapper">
           <div className="orders-grid">

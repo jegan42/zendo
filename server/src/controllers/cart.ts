@@ -178,31 +178,35 @@ async function getCartItems(req: Request, res: Response) {
         const userId = (req as any).userId;
 
         // Etape 2 : check user par son id et recupere son tableau de panier
-        const user = await User.findById({ _id: userId }).populate("cart.product");
+        const user = await User.findById({ _id: userId }).populate(
+            "cart.product"
+        );
 
         // Etape 3 : verifier que l'utilisateur existe
         if (!user) {
             return res.status(404).json({ message: "Utilisateur non trouvé" });
         }
 
-// Ajouter par Simeng : On parcourt chaque item du panier pour aller chercher son prix dans Variation
+        // Ajouter par Simeng : On parcourt chaque item du panier pour aller chercher son prix dans Variation
 
-const cartWithPrices = await Promise.all(user.cart.map(async (item: any) => {
-            const variation = await Variation.findOne({
-                productId: item.product._id,
-                color: item.color,
-                size: item.size
-            });
+        const cartWithPrices = await Promise.all(
+            user.cart.map(async (item: any) => {
+                const variation = await Variation.findOne({
+                    productId: item.product._id,
+                    color: item.color,
+                    size: item.size,
+                });
 
-       return {
-                _id: item._id,
-                product: item.product, // Contient maintenant les infos peuplées (name, images...)
-                color: item.color,
-                size: item.size,
-                quantity: item.quantity,
-                price: variation ? variation.price : 0 // On injecte le prix ici
-            };
-        }));
+                return {
+                    _id: item._id,
+                    product: item.product, // Contient maintenant les infos peuplées (name, images...)
+                    color: item.color,
+                    size: item.size,
+                    quantity: item.quantity,
+                    price: variation ? variation.price : 0, // On injecte le prix ici
+                };
+            })
+        );
 
         // Etape 4 : renvoyer les produits du panier de l'utilisateur
         return res.status(200).json({
