@@ -234,4 +234,4 @@ async function addOrder(req: Request, res: Response) {
 
 async function deleteOrder(req: Request, res: Response) {}
 
-export { addOrder, deleteOrder, getOrder, getOrderById, getRecentProducts };
+export { addOrder, deleteOrder, getOrder, getOrderById };
