@@ -186,7 +186,9 @@ function Cart() {
                     <div className="page-cart-list">{cartList()}</div>
                 </div>
                 <p className="cart-total">Total : {totalPrice}€</p>
-                <Button onClick={handlePaymentClick}>Paiement</Button>
+                <Button onClick={handlePaymentClick} disabled={!cart.length}>
+                    Paiement
+                </Button>
             </div>
             <Navbar />
         </div>
