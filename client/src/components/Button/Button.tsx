@@ -30,7 +30,7 @@ const Button: React.FC<ButtonProps> = ({
                 "btn",
                 `btn-${variant}`,
                 `btn-${size}`,
-                { "btn-loading": loading },
+                { "btn-loading": loading || disabled },
                 className
             )}
             disabled={disabled || loading}
