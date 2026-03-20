@@ -122,7 +122,7 @@ function Cart() {
         if (item.quantity < 10) {
             item.quantity += 1;
             setCart([...cart]);
-            updateCartItem(item.product, item._id, item.quantity)
+            updateCartItem(item.product.id, item._id, item.quantity)
                 .then(() => {
                     // Quantité modifiée côté API → on met à jour le badge du Header
                     notifyCartUpdated();
@@ -137,7 +137,7 @@ function Cart() {
         if (item.quantity > 1) {
             item.quantity -= 1;
             setCart([...cart]);
-            updateCartItem(item.product, item._id, item.quantity)
+            updateCartItem(item.product.id, item._id, item.quantity)
                 .then(() => {
                     // Quantité modifiée côté API → on met à jour le badge du Header
                     notifyCartUpdated();
@@ -145,13 +145,16 @@ function Cart() {
                 .catch((err) =>
                     console.error("Erreur mise à jour panier:", err)
                 );
+        } else {
+            // Si la quantité atteint 0, on supprime l'article du panier
+            handleDeleteClick(item);
         }
     };
     const handleDeleteClick = (item: any) => {
         // supprimer le produit du panier de l'utilisateur
         const removeFromCart = async (item: any) => {
             try {
-                await api.delete(`/cart/${item.product}/${item._id}`);
+                await api.delete(`/cart/${item.product.id}/${item._id}`);
 
                 const updatedCart = cart.filter((p) => p._id !== item._id);
                 setCart(updatedCart);
