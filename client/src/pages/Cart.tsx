@@ -170,6 +170,7 @@ function Cart() {
         (total, item) => total + (item.price || 0) * (item.quantity || 0),
         0
     );
+    console.log("Total du panier:", typeof totalPrice);
 
     const handlePaymentClick = () => {
         addOrder(totalPrice).then((data) => {
@@ -188,7 +189,7 @@ function Cart() {
                 <div className="page-cart">
                     <div className="page-cart-list">{cartList()}</div>
                 </div>
-                <p className="cart-total">Total : {totalPrice}€</p>
+                <p className="cart-total">Total : {totalPrice.toFixed(2)}€</p>
                 <Button onClick={handlePaymentClick} disabled={!cart.length}>
                     Paiement
                 </Button>
