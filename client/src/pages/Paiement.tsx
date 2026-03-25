@@ -102,11 +102,11 @@ function Paiement() {
 
         <div className="total-section">
           <h3 className="section-total">Sous-total</h3>
-          <p className="section-total">{subtotal}€</p>
+          <p className="section-total">{subtotal.toFixed(2)}€</p>
           <h3 className="section-total">Frais de livraison</h3>
           <p className="section-total">{shipping}€</p>
           <h3 className="section-total">Total</h3>
-          <p className="section-total">{total}€</p>
+          <p className="section-total">{total.toFixed(2)}€</p>
         </div>
 
         <div className="payment-section">
