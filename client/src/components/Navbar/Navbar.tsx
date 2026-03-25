@@ -40,7 +40,7 @@ function Navbar() {
                 <span className="navbar-label">Profil</span>
             </NavLink>
 
-            {user.role.includes('seller') && <NavLink to="/vendeur" className="navbar-item">
+            {user?.role?.includes('seller') && <NavLink to="/vendeur" className="navbar-item">
                 <Storefront className="navbar-icon" />
                 <span className="navbar-label">Boutique</span>
             </NavLink>}
