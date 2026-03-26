@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "description": "API Zendo - Marketplace artisanat",
   "main": "src/index.ts",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "npx ts-node src/index.ts",
     "start": "npx ts-node src/index.ts"
   },
   "dependencies": {
     "@google/genai": "^1.44.0",
+    "@vercel/node": "^5.6.21",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.9.0",
     "cors": "^2.8.5",
