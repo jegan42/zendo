@@ -11,8 +11,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:5173",
   "https://zendo-sandy.vercel.app",
-  // plus tard :
-  // "https://ton-front.vercel.app",
+  "https://zendo-client-six.vercel.app",
 ];
 
 const corsOptions: cors.CorsOptions = {
