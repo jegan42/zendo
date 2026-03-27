@@ -1,4 +1,4 @@
-# 🛍️ Zendo — Marketplace artisanale
+# Zendo — Marketplace artisanale
 
 Zendo est une application web fullstack permettant de mettre en relation des vendeurs et des acheteurs autour de produits artisanaux.
 
@@ -6,16 +6,16 @@ Ce projet a été réalisé en équipe dans le cadre d’une formation, avec pou
 
 ---
 
-## 🚀 Fonctionnalités
+## Fonctionnalités
 
-### 👤 Authentification
+###  Authentification
 
 * Inscription / Connexion
 * Authentification via Google OAuth
 * Réinitialisation de mot de passe par email (Nodemailer)
 * Gestion des tokens JWT
 
-### 🛒 Expérience utilisateur
+###  Expérience utilisateur
 
 * Parcours catalogue produits
 * Filtres par catégories / familles
@@ -25,18 +25,18 @@ Ce projet a été réalisé en équipe dans le cadre d’une formation, avec pou
 * Passage de commande
 * Gestion des adresses
 
-### 🧑‍🎨 Espace vendeur
+###  Espace vendeur
 
 * Création et gestion de produits
 * Modification des fiches produits
 
-### 🤖 Fonctionnalités avancées
+### Fonctionnalités avancées
 
 * Validation des formulaires (React Hook Form)
 
 ---
 
-## 🧱 Architecture
+##  Architecture
 
 Le projet est divisé en deux parties :
 
@@ -68,7 +68,7 @@ Le projet est divisé en deux parties :
 
 ---
 
-## ⚙️ Installation & Lancement
+##  Installation & Lancement
 
 ### 1. Cloner le projet
 
@@ -100,7 +100,7 @@ VITE_API_URL=vite_api_url
 VITE_GOOGLE_CLIENT_ID=vite_google_client_id
 ```
 
-👉 Ne pas commit les fichiers `.env`
+ Ne pas commit les fichiers `.env`
 
 ---
 
@@ -124,7 +124,7 @@ yarn dev
 
 ---
 
-## 🧪 Améliorations possibles
+##  Améliorations possibles
 
 * Pagination des produits
 * Dashboard vendeur (statistiques)
@@ -136,11 +136,11 @@ yarn dev
 
 ---
 
-## 👥 Équipe
+##  Équipe
 
 Projet réalisé en groupe (4 personnes) dans un contexte de formation.
 
-### 🎯 Rôle personnel
+###  Rôle personnel
 
 * Définition de l’architecture globale (frontend / backend)
 * Choix de la stack technique
@@ -152,21 +152,16 @@ Projet réalisé en groupe (4 personnes) dans un contexte de formation.
 
 ---
 
-## 📌 Contexte
+##  Contexte
 
-* ⏱️ Durée : 5 semaines
-* 📅 Rythme : 4 sessions de 3h / semaine
-* 👨‍💻 Équipe : 4 personnes
-
----
-
-## 📷 Aperçu
-
-*(Ajouter ici des captures d’écran de l’application)*
+*  Durée : 5 semaines
+*  Rythme : 4 sessions de 3h / semaine
+*  Équipe : 4 personnes
 
 ---
 
-## 🧠 Objectifs pédagogiques
+
+##  Objectifs pédagogiques
 
 * Concevoir une application fullstack
 * Structurer un projet en équipe
@@ -177,6 +172,6 @@ Projet réalisé en groupe (4 personnes) dans un contexte de formation.
 
 ---
 
-## 📄 Licence
+##  Licence
 
 Projet réalisé dans un cadre pédagogique.
