@@ -12,6 +12,7 @@ app.use(
         origin: [
             "http://localhost:5173",
             "http://localhost:3000",
+            "https://zendo-sandy.vercel.app",
             // "https://ton-front.vercel.app",
         ],
         credentials: true,
