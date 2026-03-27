@@ -1,5 +1,6 @@
 # Zendo — Marketplace artisanale
-
+Lien vers l'app : 
+> https://client-psi-brown.vercel.app/login
 Zendo est une application web fullstack permettant de mettre en relation des vendeurs et des acheteurs autour de produits artisanaux.
 
 Ce projet a été réalisé en équipe dans le cadre d’une formation, avec pour objectif de concevoir une application complète incluant authentification, gestion de produits, panier et commandes.
