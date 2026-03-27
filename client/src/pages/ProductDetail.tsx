@@ -299,7 +299,7 @@ function ProductDetail() {
         <div className="pd-gallery-layout">
           {/* -- Vignettes (thumbnails) -- */}
           <div className="pd-thumbnails">
-            {galleryImages.map((img, index) => (
+            {galleryImages.map((img: string, index: number) => (
               <img
                 key={index}
                 src={img}

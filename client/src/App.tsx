@@ -85,7 +85,7 @@ function AppContent() {
         <Route path="/orders" element={<OrdersList />} />
 
         {/* --- Route boutique vendeur (liste produits) --- */}
-        <Route path="/storeProductList" element={<StoreProductList />} />
+        <Route path="/storeProductList" element={<StoreProductList sellerId="" />} />
 
         {/* --- Routes vendeur --- */}
         <Route path="/vendeur" element={<SellerHome />} />
